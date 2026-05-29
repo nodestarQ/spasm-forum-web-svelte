@@ -1,0 +1,73 @@
+import { tick } from 'svelte'
+import { ref } from '$lib/ref.svelte'
+
+type NotificationType = 'success' | 'error' | 'warning' | 'note'
+
+interface NotificationState {
+  show: boolean
+  message: string
+  type: NotificationType
+  animationState?: 'starting' | 'leaving' | 'idle'
+}
+
+// Module-level singleton (was Nuxt useState). Toast notifications are
+// client-side ephemeral UI, so a shared module ref is fine.
+const notification = ref<NotificationState>({
+  show: false,
+  message: '',
+  type: 'success'
+})
+
+export const useNotificationStore = () => {
+  const showNotification = async (
+    message: string,
+    originalType: 'success' | 'error' | 'warning' | 'note',
+    originalDuration: number = 3000
+  ) => {
+    if (!message || typeof(message) !== "string") return
+    const minDuration = 1500
+
+    let type: NotificationType = 'note'
+    if (originalType && typeof(originalType) === "string") {
+      if (
+        originalType === 'success' || originalType === 'error' ||
+        originalType === 'warning' || originalType === 'note'
+      ) { type = originalType }
+    } else if (message.toLowerCase().startsWith('success')) {
+      type = 'success'
+    } else if (message.toLowerCase() === 'submitted') {
+      type = 'success'
+    } else if (message.toLowerCase().startsWith('error')) {
+      type = 'error'
+    } else if (message.toLowerCase().startsWith('warning')) {
+      type = 'warning'
+    } else if (message.toLowerCase().startsWith('note')) {
+      type = 'note'
+    }
+    let duration: number = 3000
+    if (typeof(originalDuration) === "number") {
+      if (originalDuration > minDuration) {
+        duration = originalDuration
+      } else { duration = minDuration }
+    }
+    let durationAnimationLeaving = duration - 1000
+
+    notification.value.show = false
+    await tick()
+
+    notification.value.animationState = 'starting'
+    notification.value.show = true
+    notification.value.message = message
+    notification.value.type = type
+
+    setTimeout(() => {
+      notification.value.animationState = 'leaving'
+    }, durationAnimationLeaving)
+
+    setTimeout(() => {
+      notification.value.show = false
+    }, duration)
+  }
+
+  return { notification, showNotification }
+}

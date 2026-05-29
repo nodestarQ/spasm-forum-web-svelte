@@ -697,7 +697,7 @@ export const useUtils = () => {
 
 
   const splitStringIntoArrayOfStrings = (
-    value: string,
+    value: string | undefined | null,
     separator: string = ',',
     ifTrim: boolean = true
   ): string[] => {

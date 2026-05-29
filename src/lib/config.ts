@@ -239,6 +239,29 @@ export const config = {
   // Pinned events
   pinnedIds: env.PUBLIC_PINNED_IDS,
 
+  // Additional appConfig/AppConfig keys that the original frontend
+  // nuxt.config did not wire (so they were undefined under Nuxt).
+  // Wired here for completeness; mostly federation / spasm-module /
+  // RSS-feed-channel options. Not yet in .env.example.
+  faviconLink: env.PUBLIC_FAVICON_LINK,
+  enableNewWeb3ActionsOther: env.PUBLIC_ENABLE_NEW_WEB3_ACTIONS_OTHER,
+  enableSpasmModule: env.PUBLIC_ENABLE_SPASM_MODULE,
+  enableSpasmSourcesUpdates: env.PUBLIC_ENABLE_SPASM_SOURCES_UPDATES,
+  enableFederationDefaultLists: env.PUBLIC_ENABLE_FEDERATION_DEFAULT_LISTS,
+  enableFederationDefaultListOfficial: env.PUBLIC_ENABLE_FEDERATION_DEFAULT_LIST_OFFICIAL,
+  enableFederationDefaultListCrypto: env.PUBLIC_ENABLE_FEDERATION_DEFAULT_LIST_CRYPTO,
+  enableFederationDefaultListPrivacy: env.PUBLIC_ENABLE_FEDERATION_DEFAULT_LIST_PRIVACY,
+  enableFederationDefaultListTech: env.PUBLIC_ENABLE_FEDERATION_DEFAULT_LIST_TECH,
+  enableFederationDefaultListPolitics: env.PUBLIC_ENABLE_FEDERATION_DEFAULT_LIST_POLITICS,
+  enableFederationCustomLinks: env.PUBLIC_ENABLE_FEDERATION_CUSTOM_LINKS,
+  enableFederationCustomSources: env.PUBLIC_ENABLE_FEDERATION_CUSTOM_SOURCES,
+  federationCustomLinks: env.PUBLIC_FEDERATION_CUSTOM_LINKS,
+  enableRssFeedChannel: env.PUBLIC_ENABLE_RSS_FEED_CHANNEL,
+  rssFeedChannelTitle: env.PUBLIC_RSS_FEED_CHANNEL_TITLE,
+  rssFeedChannelLink: env.PUBLIC_RSS_FEED_CHANNEL_LINK,
+  rssFeedChannelDescription: env.PUBLIC_RSS_FEED_CHANNEL_DESCRIPTION,
+  rssFeedChannelImageLink: env.PUBLIC_RSS_FEED_CHANNEL_IMAGE_LINK,
+
   // Colors (fallbacks match the old nuxt.config defaults; the CSS
   // variables themselves live in app.css / the theme layer)
   colorPrimaryLight: env.PUBLIC_COLOR_PRIMARY_LIGHT || '#f420af',

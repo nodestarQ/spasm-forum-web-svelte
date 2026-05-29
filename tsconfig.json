@@ -1,10 +1,17 @@
 {
-  "extends": "./.nuxt/tsconfig.json",
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "moduleResolution": "bundler"
   }
+  // Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
+  // and $lib is provided by SvelteKit. Do not overwrite "include" or "exclude":
+  // doing so will break the auto-generated config in .svelte-kit/tsconfig.json.
 }

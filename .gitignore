@@ -126,3 +126,18 @@ sw.*
 *.njsproj
 *.sln
 *.sw?
+
+# SvelteKit
+.svelte-kit/
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# SvelteKit static assets provided per-instance (deployment/admin supplies these)
+static/header.png
+static/header.jpg
+static/header.jpeg
+static/header.svg
+static/header.webp
+static/favicon.ico
+static/pwa-192x192.png
+static/pwa-512x512.png

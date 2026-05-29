@@ -5,6 +5,7 @@
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
   import { useWeb3 } from '$lib/utils/useWeb3';
   import Navbar from '$lib/components/navbar/Navbar.svelte';
+  import ExtraNotification from '$lib/components/extra/ExtraNotification.svelte';
 
   let { children } = $props();
 
@@ -56,7 +57,7 @@
       <Navbar class="fixed bottom-0 w-screen" />
     </div>
 
-    <!-- TODO (task 11): <ExtraNotification /> -->
+    <ExtraNotification />
 
     <div class="grid grid-cols-11">
       <!-- TODO (task 12): <Feed /> in the left column (col-span-4) -->

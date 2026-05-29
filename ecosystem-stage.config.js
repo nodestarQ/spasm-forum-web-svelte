@@ -6,7 +6,8 @@ module.exports = {
     {
       // name: `stage-front@${packageJson.version}`,
       name: process.env.FRONTEND_PM2_STAGE_NAME || 'dr-stage-front',
-      script: './.output/server/index.mjs',
+      // SvelteKit adapter-node output (built with `npm run build`)
+      script: './build/index.js',
       exec_mode: process.env.FRONTEND_PM2_STAGE_EXEC_MODE || 'cluster',
       instances: process.env.FRONTEND_PM2_STAGE_INSTANCES || '1',
       autorestart: true,
@@ -14,7 +15,9 @@ module.exports = {
       max_memory_restart: process.env.FRONTEND_PM2_STAGE_MAX_MEMORY_RESTART || '256M',
       env: {
         NODE_ENV: "staging",
-        NITRO_PORT: parseInt(process.env.FRONTEND_STAGE_PORT) || 3000,
+        // adapter-node reads PORT/HOST (HOST defaults to 0.0.0.0)
+        PORT: parseInt(process.env.FRONTEND_STAGE_PORT) || 3000,
+        HOST: process.env.FRONTEND_STAGE_HOST || "0.0.0.0",
       }
     }
   ]

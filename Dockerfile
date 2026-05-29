@@ -5,8 +5,6 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-COPY tsconfig.json ./
-# COPY .env ./
 
 # Install dependencies
 RUN npm ci
@@ -14,7 +12,7 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build TypeScript
+# Build the SvelteKit app (adapter-node -> ./build)
 RUN npm run build
 
 # Runtime stage
@@ -28,11 +26,15 @@ COPY package*.json ./
 # Install only production dependencies
 RUN npm ci --omit=dev --ignore-scripts
 
-# Copy built app from builder
-COPY --from=builder /app/.output ./.output
+# Copy the built app from the builder
+COPY --from=builder /app/build ./build
 
 # Expose port
 EXPOSE 3000
 
+# adapter-node reads PORT/HOST at runtime
+ENV PORT=3000
+ENV HOST=0.0.0.0
+
 # Start app
-CMD ["node", "./.output/server/index.mjs"]
+CMD ["node", "build"]

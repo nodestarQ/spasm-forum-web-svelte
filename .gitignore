@@ -1,17 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
-# Custom files for each instance
-components/custom/CustomContacts.vue
-components/custom/CustomIntro.vue
+# Custom files for each instance (deployer copies the .example)
 src/lib/components/custom/CustomContacts.svelte
 src/lib/components/custom/CustomIntro.svelte
-public/header.png
-public/header.jpg
-public/header.jpeg
-public/header.svg
-public/header.webp
-public/favicon.ico
-public/pwa-192x192.png
-public/pwa-512x512.png
 
 ### Node template
 # Logs
@@ -87,18 +77,6 @@ typings/
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# Nuxt generate
-dist
-
-# vuepress build output
-.vuepress/dist
-
 # Serverless directories
 .serverless
 
@@ -115,10 +93,6 @@ sw.*
 *~
 *.swp
 *.swo
-
-# Other
-.output
-.nitro
 
 # Editor directories and files
 .idea

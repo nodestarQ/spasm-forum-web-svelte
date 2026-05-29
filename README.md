@@ -9,7 +9,7 @@
 
 Mirrors: [Forgejo](https://git.spasm.network/spasm-network/spasm-forum-web) [Codeberg](https://codeberg.org/spasm-network/spasm-forum-web) [Github](https://github.com/spasm-network/spasm-forum-web)
 
-spasm-forum-web is a frontend for a [Spasm](https://github.com/spasm-network/spasm.js) forum.
+spasm-forum-web is a frontend for a [Spasm](https://github.com/spasm-network/spasm.js) forum. It is built with SvelteKit (Svelte 5) and runs as a standalone Node server via adapter-node.
 
 spasm-forum-server repository can be found [here](https://github.com/spasm-network/spasm-forum-server).
 
@@ -85,11 +85,7 @@ npm run dev
 
 Open a browser and test the app at `localhost:3000`.
 
-*Note: press `ctrl+c` in the terminal to stop the process.* 
-
-*Note: `npm run dev` temporarily doesn't work on nuxt versions
-above 3.15 because they introduced breaking changes, but you
-can still use `npm run prod`.*
+*Note: press `ctrl+c` in the terminal to stop the process.*
 
 ---
 
@@ -98,7 +94,7 @@ can still use `npm run prod`.*
 #### Necessary settings
 
 - Change app name, title, description, about, manifest params in `.env`.
-- Add logos (recommended sizes are 100x100, 192x192, 512x512) as `favicon.ico`, `pwa-192x192.png`, `pwa-512x512.png` into `public/` folder.
+- Add logos (recommended sizes are 100x100, 192x192, 512x512) as `favicon.ico`, `pwa-192x192.png`, `pwa-512x512.png` into the `static/` folder.
 
 #### Optional settings
 
@@ -120,11 +116,11 @@ and admin addresses are listed in `.env` files in **both** frontend
 (spasm-forum-web) and backend (spasm-forum-server).
 
 ```
-ENABLE_APP_CONFIG_CHANGES=true
-ENABLE_APP_CONFIG_CHANGES_BY_ADMIN=true
+PUBLIC_ENABLE_APP_CONFIG_CHANGES=true
+PUBLIC_ENABLE_APP_CONFIG_CHANGES_BY_ADMIN=true
 # Separate admin addresses with comma
-ENABLE_ADMIN=true
-ADMINS=""
+PUBLIC_ENABLE_ADMIN=true
+PUBLIC_ADMINS=""
 ```
 
 #### Advanced customization
@@ -136,18 +132,18 @@ If you've used scripts for the automated server setup, then custom
 intro and contacts files should have already been created.
 
 If you follow the manual installation, then create custom files
-`CustomIntro.vue` and `CustomContacts.vue` in `components/custom/`.
+`CustomIntro.svelte` and `CustomContacts.svelte` in `src/lib/components/custom/`.
 
 If your version has example files, then you can simply copy-paste them:
 
 ```
-cp components/custom/CustomContacts.example.vue components/custom/CustomContacts.vue
-cp components/custom/CustomIntro.example.vue components/custom/CustomIntro.vue
+cp src/lib/components/custom/CustomContacts.example.svelte src/lib/components/custom/CustomContacts.svelte
+cp src/lib/components/custom/CustomIntro.example.svelte src/lib/components/custom/CustomIntro.svelte
 ```
 
 #### Updates
 
-Note: customized files like `components/custom/CustomIntro.vue`, `components/custom/CustomContacts.vue`, and `.env` are ignored by git, so you can customize them and they won't be changed after updating the code to a newer version with `git pull`. However, it's a good idea to back these files up.
+Note: customized files like `src/lib/components/custom/CustomIntro.svelte`, `src/lib/components/custom/CustomContacts.svelte`, and `.env` are ignored by git, so you can customize them and they won't be changed after updating the code to a newer version with `git pull`. However, it's a good idea to back these files up.
 
 ---
 
@@ -157,10 +153,18 @@ Note: customized files like `components/custom/CustomIntro.vue`, `components/cus
 npm ci
 ```
 
-Build the frontend for running in production.
+Build the frontend for running in production. The SvelteKit
+adapter-node output is written to the `build/` folder.
 
 ```
 npm run build
+```
+
+You can run the built app directly with Node:
+
+```
+node build
+# or: npm start
 ```
 
 ## Run production
@@ -178,8 +182,8 @@ npm i pm2 -g
 # To make sure app starts after reboot
 pm2 startup
 
-# Run the app
-npm run prod
+# Run the app (production)
+pm2 start ecosystem-prod.config.js
 
 # Freeze a process list on reboot
 pm2 save
@@ -199,7 +203,7 @@ posts and latest comments by enabling this environment
 variable in the `./.env` file:
 
 ```
-USE_MOCKED_DATA_IF_BACKEND_IS_DOWN=true
+PUBLIC_USE_MOCKED_DATA_IF_BACKEND_IS_DOWN=true
 ```
 
 Don't forget to restart the app with `npm run dev`.

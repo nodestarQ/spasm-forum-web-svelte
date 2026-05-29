@@ -60,6 +60,13 @@ export default defineConfig(({ mode }) => {
             })
           ])
     ],
+    server: {
+      // Honor the FRONTEND_DEV_PORT env var (the Nuxt app used 3000).
+      port: Number(env.FRONTEND_DEV_PORT) || 3000
+    },
+    preview: {
+      port: Number(env.FRONTEND_PROD_PORT) || 3000
+    },
     test: {
       globals: true,
       environment: 'jsdom',

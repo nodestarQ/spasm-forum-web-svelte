@@ -1,30 +1,30 @@
-# Custom files for each instance
-components/custom/CustomContacts.vue
-components/custom/CustomIntro.vue
-public/header.png
-public/header.jpg
-public/header.jpeg
-public/header.svg
-public/header.webp
-# Favicon is included into image
-# public/favicon.ico
-# public/pwa-192x192.png
-# public/pwa-512x512.png
+# Per-instance header images (optional, loaded at runtime).
+# Custom intro/contacts components are NOT ignored here: they are
+# hard imports in the SvelteKit build, so they must be present.
+static/header.png
+static/header.jpg
+static/header.jpeg
+static/header.svg
+static/header.webp
+# Favicon and PWA icons are included in the image:
+# static/favicon.ico
+# static/pwa-192x192.png
+# static/pwa-512x512.png
 
 node_modules
 npm-debug.log
 Dockerfile
 .dockerignore
 .git
-dist
 .gitignore
 README.md
 .env
 .env.local
 .env*
 
-# Service worker
-sw.*
+# Build artifacts (rebuilt inside the image)
+.svelte-kit
+build
 
 # macOS
 .DS_Store
@@ -33,10 +33,6 @@ sw.*
 *~
 *.swp
 *.swo
-
-# Other
-.output
-.nitro
 
 # Editor directories and files
 .idea

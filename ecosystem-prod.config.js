@@ -6,7 +6,8 @@ module.exports = {
     {
       // name: `prod-front@${packageJson.version}`,
       name: process.env.FRONTEND_PM2_PROD_NAME || 'dr-prod-front',
-      script: './.output/server/index.mjs',
+      // SvelteKit adapter-node output (built with `npm run build`)
+      script: './build/index.js',
       exec_mode: process.env.FRONTEND_PM2_PROD_EXEC_MODE || 'cluster',
       instances: process.env.FRONTEND_PM2_PROD_INSTANCES || 'max',
       autorestart: true,
@@ -14,10 +15,9 @@ module.exports = {
       max_memory_restart: process.env.FRONTEND_PM2_PROD_MAX_MEMORY_RESTART || '1G',
       env: {
         NODE_ENV: "production",
-        NITRO_PORT: parseInt(process.env.FRONTEND_PROD_PORT) || 3000,
-        // By default, nuxt prod defaults to 0.0.0.0, 
-        // nuxt dev defaults to 127.0.0.1
-        // NITRO_HOST: "0.0.0.0", 
+        // adapter-node reads PORT/HOST (HOST defaults to 0.0.0.0)
+        PORT: parseInt(process.env.FRONTEND_PROD_PORT) || 3000,
+        HOST: process.env.FRONTEND_PROD_HOST || "0.0.0.0",
       }
     }
   ]

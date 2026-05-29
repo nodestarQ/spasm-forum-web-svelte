@@ -83,7 +83,7 @@ class AppConfigStore {
     statusLink: config.statusLink,
     lensLink: config.lensLink,
     farcasterLink: config.farcasterLink,
-    blueskyLink: config.farcasterLink,
+    blueskyLink: config.blueskyLink,
     hiveLink: config.hiveLink,
     pushLink: config.pushLink,
     mirrorLink: config.mirrorLink,

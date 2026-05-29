@@ -8,11 +8,19 @@
   import ExtraNotification from '$lib/components/extra/ExtraNotification.svelte';
   import Feed from '$lib/components/feed/Feed.svelte';
   import Info from '$lib/components/info/Info.svelte';
+  import ExtraWeb3Modal from '$lib/components/extra/ExtraWeb3Modal.svelte';
+  import ExtraQrCodeModal from '$lib/components/extra/ExtraQrCodeModal.svelte';
+  import ExtraFollowModal from '$lib/components/extra/ExtraFollowModal.svelte';
   import { useFeed } from '$lib/utils/useFeed';
 
   let { children } = $props();
 
-  const { setConnectedAddress } = useWeb3();
+  const {
+    setConnectedAddress,
+    isWeb3ModalShown,
+    isQrCodeModalShown,
+    isFollowModalShown
+  } = useWeb3();
   const { isFeedShown } = useFeed();
   const appConfig = useAppConfigStore()?.getAppConfig;
 
@@ -76,7 +84,16 @@
       </div>
     </div>
 
-    <!-- TODO (task 14): web3 / qr / follow modals -->
+    {#if isWeb3ModalShown.value}
+      <ExtraWeb3Modal />
+    {/if}
+    {#if isQrCodeModalShown.value}
+      <ExtraQrCodeModal />
+    {/if}
+    {#if isFollowModalShown.value}
+      <ExtraFollowModal />
+    {/if}
+
     <!-- TODO (task 10 follow-up): dynamic :root color vars from appConfig (env/admin overrides) -->
   </div>
 </div>

@@ -198,4 +198,13 @@
     @apply text-colorSecondary-dark dark:text-colorSecondary-light;
     @apply bg-bgBase-dark dark:bg-bgBase-light
   }
+
+  /* Hide scrollbar across browsers (used by the modals) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

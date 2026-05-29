@@ -9,7 +9,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    // The ported Nuxt code imports types with plain `import {}` rather
+    // than `import type {}`. Disabling verbatimModuleSyntax avoids
+    // rewriting type imports across the whole codebase during the
+    // migration. Can be re-enabled in a later cleanup if desired.
+    "verbatimModuleSyntax": false
   }
   // Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
   // and $lib is provided by SvelteKit. Do not overwrite "include" or "exclude":

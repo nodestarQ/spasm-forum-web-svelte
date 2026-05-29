@@ -1,9 +1,13 @@
 <script lang="ts">
   import '../app.css';
   import { onMount } from 'svelte';
+  import { dev } from '$app/environment';
+  import { pwaInfo } from 'virtual:pwa-info';
+  import { registerSW } from 'virtual:pwa-register';
   import { ModeWatcher } from 'mode-watcher';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
   import { useWeb3 } from '$lib/utils/useWeb3';
+  import { applyThemeColors, applyFavicon } from '$lib/utils/useTheme';
   import Navbar from '$lib/components/navbar/Navbar.svelte';
   import ExtraNotification from '$lib/components/extra/ExtraNotification.svelte';
   import Feed from '$lib/components/feed/Feed.svelte';
@@ -23,6 +27,18 @@
   } = useWeb3();
   const { isFeedShown } = useFeed();
   const appConfig = useAppConfigStore()?.getAppConfig;
+
+  // PWA web manifest link (undefined during SSR / dev when the
+  // PWA dev option is off).
+  const webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
+
+  // Apply the admin-configured theme colors and favicon once the
+  // app config is loaded (reapplies when the config changes).
+  $effect(() => {
+    const config = useAppConfigStore()?.getAppConfig;
+    applyThemeColors(config);
+    applyFavicon(config);
+  });
 
   const onAccountsChanged = (accounts?: string[]) => {
     if (Array.isArray(accounts) && typeof accounts?.[0] === 'string') {
@@ -47,6 +63,10 @@
     // Always use the latest app config from the database.
     useAppConfigStore()?.fetchAndUpdateAppConfig();
     setListeners(true);
+    // Register the service worker in production (autoUpdate).
+    if (!dev) {
+      registerSW({ immediate: true });
+    }
     return () => setListeners(false);
   });
 </script>
@@ -57,14 +77,13 @@
   <meta property="og:title" content={appConfig?.introTitle || ''} />
   <meta property="og:site_name" content={appConfig?.introTitle || ''} />
   <meta property="og:description" content={appConfig?.introAbout || ''} />
+  {@html webManifestLink}
 </svelte:head>
 
 <ModeWatcher />
 
 <div class="text-base bg-bgBase-light dark:bg-bgBase-dark text-colorBase-light dark:text-colorBase-dark">
   <div class="max-w-[1920px] m-auto">
-    <!-- TODO (task 18): PWA manifest -->
-
     <div class="Navbar">
       <Navbar class="fixed bottom-0 w-screen" />
     </div>
@@ -93,7 +112,5 @@
     {#if isFollowModalShown.value}
       <ExtraFollowModal />
     {/if}
-
-    <!-- TODO (task 10 follow-up): dynamic :root color vars from appConfig (env/admin overrides) -->
   </div>
 </div>

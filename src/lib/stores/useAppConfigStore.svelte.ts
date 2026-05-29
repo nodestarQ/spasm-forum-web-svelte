@@ -8,8 +8,7 @@ import {
 import { config } from '$lib/config'
 import { browser } from '$app/environment'
 import { useUtils } from '$lib/utils/useUtils'
-// TODO (task 8): restore events-store wiring once it is ported.
-// import { useEventsStore } from '$lib/stores/useEventsStore.svelte'
+import { useEventsStore } from '$lib/stores/useEventsStore.svelte'
 const {
   splitIntoArray,
   parseEnvBool
@@ -589,9 +588,11 @@ class AppConfigStore {
 
         this.updateAppConfig(appConfig)
 
-        // TODO (task 8): once the events store is ported, propagate
-        // config changes to it on the client, e.g.:
-        // if (browser) { useEventsStore().updateStateAppConfig() }
+        // Propagate config to the events store (client-side only;
+        // doing this during SSR errored in the original).
+        if (browser) {
+          useEventsStore().updateStateAppConfig()
+        }
       } catch (err) {
         console.error(err);
       }

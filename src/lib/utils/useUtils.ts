@@ -134,6 +134,29 @@ export const useUtils = () => {
     return true
   }
 
+  // Dedupe a list of events (or event-children) by their first id
+  // value, keeping the first occurrence and preserving order. Used
+  // to feed keyed {#each} blocks: Svelte throws on duplicate keys
+  // (unlike Vue, which only warned), and the same event can appear
+  // twice via mock data, federation, or Nostr/Spasm overlap.
+  const getUniqueByFirstId = <T extends { ids?: any }>(
+    array?: T[] | null
+  ): T[] => {
+    if (!Array.isArray(array)) return []
+    const seen = new Set<string | number>()
+    const result: T[] = []
+    array.forEach((item) => {
+      const id = item?.ids?.[0]?.value
+      if (id === undefined || id === null) {
+        result.push(item)
+      } else if (!seen.has(id)) {
+        seen.add(id)
+        result.push(item)
+      }
+    })
+    return result
+  }
+
   const isStringOrNumber = (val: any): boolean => {
     if (!val && val !== 0) return false
     if (typeof(val) === "string") return true
@@ -1186,6 +1209,7 @@ export const useUtils = () => {
     isArrayOfNumbersOrStrings,
     isArrayOfStringsWithValues,
     isArrayWithValues,
+    getUniqueByFirstId,
     isStringOrNumber,
     isNumberOrString,
     ifStringOrNumber,

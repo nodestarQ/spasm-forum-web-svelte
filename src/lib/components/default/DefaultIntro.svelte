@@ -5,7 +5,6 @@
   into the .env file.
 -->
 <script lang="ts">
-  import { browser } from '$app/environment';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
@@ -15,25 +14,38 @@
   const introTitleExtra = appConfig?.introTitleExtra;
   const introAbout = appConfig?.introAbout;
 
-  const purify = (html: string): string =>
-    browser ? DOMPurify.sanitize(html) : '';
   const aboutHtml = introAbout
     ? (marked(introAbout, { breaks: true }) as string)
     : '';
+
+  // Sanitize client-side only. These start empty so the server
+  // render and the initial client (hydration) render match, which
+  // avoids an {@html} hydration mismatch (Svelte would otherwise
+  // keep the empty server value and the text would never appear).
+  // The $effect fills them in after mount; DOMPurify needs a DOM,
+  // so it can't run during SSR anyway.
+  let titleHtml = $state('');
+  let titleExtraHtml = $state('');
+  let aboutHtmlSafe = $state('');
+  $effect(() => {
+    titleHtml = introTitle ? DOMPurify.sanitize(introTitle) : '';
+    titleExtraHtml = introTitleExtra ? DOMPurify.sanitize(introTitleExtra) : '';
+    aboutHtmlSafe = aboutHtml ? DOMPurify.sanitize(aboutHtml) : '';
+  });
 </script>
 
 <div class="whitespace-pre-wrap">
   {#if introTitle}
     <p class="text-2xl mb-4">
       <span class="font-bold text-4xl text-colorPrimary-light dark:text-colorPrimary-dark">
-        {@html purify(introTitle)}
+        {@html titleHtml}
       </span>
       <!-- &nbsp; is one space -->
       <span>&nbsp;</span>
       {#if introTitleExtra}
-        <span>{@html purify(introTitleExtra)}</span>
+        <span>{@html titleExtraHtml}</span>
       {/if}
     </p>
   {/if}
-  <div>{@html purify(aboutHtml)}</div>
+  <div>{@html aboutHtmlSafe}</div>
 </div>

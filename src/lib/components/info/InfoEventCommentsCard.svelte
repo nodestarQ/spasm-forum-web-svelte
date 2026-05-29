@@ -32,7 +32,8 @@
     extractParentIdForDisplay,
     extractOneAuthorAddressForDisplay
   } = useWeb3();
-  const { sliceAddress, toBeDate, isValidSpasmEventV2 } = useUtils();
+  const { sliceAddress, toBeDate, isValidSpasmEventV2, getUniqueByFirstId } =
+    useUtils();
   const { extractTextForDisplay, standardizeTextForDisplay } = useUtilsEnv();
   const enableMarkdownInComments = appConfig?.enableMarkdownInComments;
   const enableNewWeb3ActionsAll = appConfig?.enableNewWeb3ActionsAll;
@@ -307,7 +308,7 @@
     -->
     {#if comment.children}
       <div class="children">
-        {#each comment.children as child (child.ids?.[0]?.value)}
+        {#each getUniqueByFirstId(comment.children) as child (child.ids?.[0]?.value)}
           <InfoEventCommentsCard
             comment={child.event}
             showActionDetails={showActionDetails}

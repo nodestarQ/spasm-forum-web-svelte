@@ -10,7 +10,7 @@
 
   let { class: className = '' }: { class?: string } = $props();
 
-  const { areValidSpasmEventsV2, randomNumber } = useUtils();
+  const { areValidSpasmEventsV2, getUniqueByFirstId } = useUtils();
   const eventsStore = useEventsStore();
   const { feedFilters } = useFeedEventsFilters();
 
@@ -59,13 +59,13 @@
     <span id="feed-top-anchor"></span>
 
     {#if eventsStore.getPinnedPosts && eventsStore.getPinnedPosts[0] && areValidSpasmEventsV2(eventsStore.getPinnedPosts)}
-      {#each eventsStore.getPinnedPosts as post (post?.ids?.[0]?.value || randomNumber())}
+      {#each getUniqueByFirstId(eventsStore.getPinnedPosts) as post (post?.ids?.[0]?.value)}
         <FeedEventsCard {post} showPinnedIcon={true} showTimeAgo={false} />
       {/each}
     {/if}
 
     {#if eventsStore.getPosts && eventsStore.getPosts[0] && areValidSpasmEventsV2(eventsStore.getPosts)}
-      {#each eventsStore.getPosts as post (post?.ids?.[0]?.value || randomNumber())}
+      {#each getUniqueByFirstId(eventsStore.getPosts) as post (post?.ids?.[0]?.value)}
         <FeedEventsCard {post} />
       {/each}
     {/if}

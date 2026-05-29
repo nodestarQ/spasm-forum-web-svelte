@@ -25,7 +25,7 @@
   const apiURL = useAppConfigStore()?.getApiUrl;
 
   const { showFeed } = useFeed();
-  const { areValidSpasmEventsV2 } = useUtils();
+  const { areValidSpasmEventsV2, getUniqueByFirstId } = useUtils();
   const { getMockSpasmEventComments } = useMocks();
   const useMockedDataIfBackendIsDown =
     config?.useMockedDataIfBackendIsDown === 'true';
@@ -174,7 +174,7 @@
                 {showActionDetailsText} details
               </div>
 
-              {#each comments as comment (comment.ids?.[0]?.value)}
+              {#each getUniqueByFirstId(comments) as comment (comment.ids?.[0]?.value)}
                 <InfoEventCommentsCard
                   comment={comment}
                   showCommentsCount={true}

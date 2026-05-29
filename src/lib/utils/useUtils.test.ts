@@ -741,3 +741,33 @@ describe('sanitizeObjectValuesWithDompurify', () => {
   });
 })
 */
+
+const { getUniqueByFirstId } = useUtils()
+
+describe('getUniqueByFirstId function', () => {
+  it('removes items sharing the same first id, keeping order', () => {
+    const a = { ids: [{ value: 'id-a' }] };
+    const b = { ids: [{ value: 'id-b' }] };
+    const dupA = { ids: [{ value: 'id-a' }] };
+    // Mirrors the crash: the same event at indexes 0 and 3.
+    const input = [a, b, { ids: [{ value: 'id-c' }] }, dupA];
+    const result = getUniqueByFirstId(input);
+    expect(result.length).toBe(3);
+    expect(result.map((e) => e.ids[0].value)).toEqual(['id-a', 'id-b', 'id-c']);
+    // First occurrence is kept.
+    expect(result[0]).toBe(a);
+  });
+
+  it('keeps items that have no id (cannot be deduped)', () => {
+    const noId1 = {} as any;
+    const noId2 = { ids: [] } as any;
+    const result = getUniqueByFirstId([noId1, noId2]);
+    expect(result.length).toBe(2);
+  });
+
+  it('returns [] for null/undefined/non-array input', () => {
+    expect(getUniqueByFirstId(null)).toEqual([]);
+    expect(getUniqueByFirstId(undefined)).toEqual([]);
+    expect(getUniqueByFirstId('nope' as any)).toEqual([]);
+  });
+})

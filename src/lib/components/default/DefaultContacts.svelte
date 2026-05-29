@@ -1,6 +1,5 @@
 <script lang="ts">
   // Marked converts markdown to HTML
-  import { browser } from '$app/environment';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
@@ -71,11 +70,16 @@
 
   const extraContactInfo = appConfig?.extraContactInfo;
 
-  const purify = (html: string): string =>
-    browser ? DOMPurify.sanitize(html) : '';
   const extraContactHtml = extraContactInfo
     ? (marked(extraContactInfo, { breaks: true }) as string)
     : '';
+
+  // Sanitize client-side only (see DefaultIntro for the rationale:
+  // start empty so SSR and hydration match, fill in after mount).
+  let extraContactSafe = $state('');
+  $effect(() => {
+    extraContactSafe = extraContactHtml ? DOMPurify.sanitize(extraContactHtml) : '';
+  });
 </script>
 
 <div>
@@ -210,7 +214,7 @@
 
   {#if extraContactInfo}
     <div class="whitespace-pre-line">
-      <div>{@html purify(extraContactHtml)}</div>
+      <div>{@html extraContactSafe}</div>
     </div>
   {/if}
 </div>

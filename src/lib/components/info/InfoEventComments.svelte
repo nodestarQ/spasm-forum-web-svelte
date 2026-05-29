@@ -3,7 +3,7 @@
   import { useUtils } from '$lib/utils/useUtils';
   import InfoEventCommentsCard from './InfoEventCommentsCard.svelte';
 
-  const { isValidSpasmEventV2 } = useUtils();
+  const { isValidSpasmEventV2, getUniqueByFirstId } = useUtils();
 
   let {
     event,
@@ -45,7 +45,7 @@
         >
           {showActionDetailsText} details
         </div>
-        {#each event.children as child (child?.ids?.[0]?.value)}
+        {#each getUniqueByFirstId(event.children) as child (child?.ids?.[0]?.value)}
           <InfoEventCommentsCard
             comment={child.event}
             showActionDetails={showActionDetails}

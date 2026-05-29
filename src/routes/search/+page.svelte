@@ -14,8 +14,13 @@
   import InfoEventCommentsCard from '$lib/components/info/InfoEventCommentsCard.svelte';
 
   const { getNostrRelays, toBeHex } = useNostr();
-  const { isArrayWithValues, isObjectWithValues, isValidSpasmEventV2, wait } =
-    useUtils();
+  const {
+    isArrayWithValues,
+    isObjectWithValues,
+    isValidSpasmEventV2,
+    wait,
+    getUniqueByFirstId
+  } = useUtils();
 
   let filterIds = $state('');
   let filterAuthors = $state('');
@@ -366,7 +371,7 @@
     </div>
   {/if}
   <div>
-    {#each events as event (event.ids?.[0]?.value)}
+    {#each getUniqueByFirstId(events) as event (event.ids?.[0]?.value)}
       <InfoEventCommentsCard comment={event} showCommentsCount={true} />
     {/each}
   </div>

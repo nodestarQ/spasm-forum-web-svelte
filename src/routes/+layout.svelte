@@ -7,6 +7,7 @@
   import Navbar from '$lib/components/navbar/Navbar.svelte';
   import ExtraNotification from '$lib/components/extra/ExtraNotification.svelte';
   import Feed from '$lib/components/feed/Feed.svelte';
+  import Info from '$lib/components/info/Info.svelte';
   import { useFeed } from '$lib/utils/useFeed';
 
   let { children } = $props();
@@ -66,11 +67,12 @@
       <Feed
         class="lg:border-r border-borderColor-light dark:border-borderColor-dark h-screen overflow-scroll col-span-11 lg:col-span-4 {isFeedShown.value ? 'block' : 'hidden lg:block'}"
       />
-      <!-- TODO (task 13): wrap the page content in <Info> -->
       <div
         class="w-screen h-screen overflow-scroll col-span-7 lg:w-full {!isFeedShown.value ? 'block' : 'hidden lg:block'}"
       >
-        {@render children()}
+        <Info>
+          {@render children()}
+        </Info>
       </div>
     </div>
 

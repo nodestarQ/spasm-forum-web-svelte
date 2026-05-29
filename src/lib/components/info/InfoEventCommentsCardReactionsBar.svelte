@@ -8,13 +8,14 @@
   const enableNewWeb3ActionsAll = appConfig?.enableNewWeb3ActionsAll;
   const enableNewWeb3ActionsReact = appConfig?.enableNewWeb3ActionsReact;
 
-  let { comment }: { comment?: SpasmEventV2 } = $props();
+  let { comment, class: className = '' }: { comment?: SpasmEventV2; class?: string } =
+    $props();
 
   const reactions = ['Upvote', 'Downvote'];
 </script>
 
 {#if enableNewWeb3ActionsAll && enableNewWeb3ActionsReact}
-  <span class="inline-block">
+  <span class="inline-block {className}">
     <InfoEventReactionsBarButton target={comment?.ids?.[0]?.value?.toString()} count={spasm.getTotalOfReaction(comment, 'upvote')} reaction={reactions[0]} text={false} iconUpvote={true} parentEvent={comment} />
     <InfoEventReactionsBarButton target={comment?.ids?.[0]?.value?.toString()} count={spasm.getTotalOfReaction(comment, 'downvote')} reaction={reactions[1]} text={false} iconDownvote={true} parentEvent={comment} />
   </span>

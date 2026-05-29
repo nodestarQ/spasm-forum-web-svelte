@@ -6,7 +6,8 @@
     bgcolor = undefined,
     size = undefined,
     scale = undefined,
-    spotcolor = undefined
+    spotcolor = undefined,
+    class: className = ''
   }: {
     seed?: string;
     color?: string;
@@ -14,6 +15,7 @@
     size?: number;
     scale?: number;
     spotcolor?: string;
+    class?: string;
   } = $props();
 
   let canvas = $state<HTMLCanvasElement | undefined>();
@@ -104,6 +106,6 @@
   });
 </script>
 
-<span>
+<span class={className}>
   <canvas bind:this={canvas} class="Blockies max-w-[82px]"></canvas>
 </span>

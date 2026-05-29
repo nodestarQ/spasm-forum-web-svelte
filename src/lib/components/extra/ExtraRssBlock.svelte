@@ -31,7 +31,8 @@
     showSignerFilter = false,
     showCategoryFilter = false,
     enablePosts: enablePostsProp = true,
-    enableComments: enableCommentsProp = false
+    enableComments: enableCommentsProp = false,
+    class: className = ''
   }: {
     event?: SpasmEventV2;
     activity?: string;
@@ -44,6 +45,7 @@
     showCategoryFilter?: boolean;
     enablePosts?: boolean;
     enableComments?: boolean;
+    class?: string;
   } = $props();
 
   const activities = ['hot', 'rising', 'all'];
@@ -140,7 +142,7 @@
 </script>
 
 {#if browser && enableRssFeedChannel}
-  <div class="overflow-auto overflow-wrap break-words">
+  <div class="overflow-auto overflow-wrap break-words {className}">
     <div class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark">
       {#if showSubscribeButton}
         Subscribe:

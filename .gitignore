@@ -2,6 +2,8 @@
 # Custom files for each instance
 components/custom/CustomContacts.vue
 components/custom/CustomIntro.vue
+src/lib/components/custom/CustomContacts.svelte
+src/lib/components/custom/CustomIntro.svelte
 public/header.png
 public/header.jpg
 public/header.jpeg

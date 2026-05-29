@@ -6,10 +6,13 @@
   import { useWeb3 } from '$lib/utils/useWeb3';
   import Navbar from '$lib/components/navbar/Navbar.svelte';
   import ExtraNotification from '$lib/components/extra/ExtraNotification.svelte';
+  import Feed from '$lib/components/feed/Feed.svelte';
+  import { useFeed } from '$lib/utils/useFeed';
 
   let { children } = $props();
 
   const { setConnectedAddress } = useWeb3();
+  const { isFeedShown } = useFeed();
   const appConfig = useAppConfigStore()?.getAppConfig;
 
   const onAccountsChanged = (accounts?: string[]) => {
@@ -60,9 +63,13 @@
     <ExtraNotification />
 
     <div class="grid grid-cols-11">
-      <!-- TODO (task 12): <Feed /> in the left column (col-span-4) -->
+      <Feed
+        class="lg:border-r border-borderColor-light dark:border-borderColor-dark h-screen overflow-scroll col-span-11 lg:col-span-4 {isFeedShown.value ? 'block' : 'hidden lg:block'}"
+      />
       <!-- TODO (task 13): wrap the page content in <Info> -->
-      <div class="w-screen h-screen overflow-scroll col-span-11 lg:col-span-7 lg:w-full">
+      <div
+        class="w-screen h-screen overflow-scroll col-span-7 lg:w-full {!isFeedShown.value ? 'block' : 'hidden lg:block'}"
+      >
         {@render children()}
       </div>
     </div>

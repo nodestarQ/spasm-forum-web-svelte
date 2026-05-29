@@ -9,9 +9,14 @@ const config = {
 
   compilerOptions: {
     // Accessibility is deferred during the Nuxt->Svelte migration (the
-    // original app was not a11y-focused, e.g. clickable <div>s). Drop
-    // a11y warnings so checks stay clean; revisit a11y later.
-    warningFilter: (warning) => !warning.code.startsWith('a11y')
+    // original app was not a11y-focused, e.g. clickable <div>s). Also
+    // drop state_referenced_locally: ported components reference props
+    // in script setup (the Vue pattern) and instances are keyed/stable,
+    // so the "captures initial value" hint is noise here. Revisit both
+    // (a11y + reactivity) later.
+    warningFilter: (warning) =>
+      !warning.code.startsWith('a11y') &&
+      warning.code !== 'state_referenced_locally'
   },
 
   kit: {

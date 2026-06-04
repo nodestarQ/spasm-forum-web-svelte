@@ -117,7 +117,7 @@
 <div class="text-base bg-bgBase-light dark:bg-bgBase-dark text-colorBase-light dark:text-colorBase-dark">
   <div class="max-w-[1920px] m-auto">
     <div class="Navbar">
-      <Navbar class="fixed bottom-0 w-screen" />
+      <Navbar class="fixed inset-x-0 bottom-0" />
     </div>
 
     <ExtraNotification />

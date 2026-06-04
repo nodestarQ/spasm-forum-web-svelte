@@ -59,12 +59,44 @@
     }
   };
 
+  // In production we run the generated service worker (autoUpdate). In
+  // dev we run none, so any worker still registered on this origin is
+  // stale (typically the old Nuxt PWA worker from when it served the
+  // same localhost:3000). Left alone it keeps serving a cached _nuxt/*
+  // app shell and spams the console with 404s, so tear it down and drop
+  // its caches.
+  const removeStaleServiceWorkers = async () => {
+    if (!('serviceWorker' in navigator)) return;
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((r) => r.unregister()));
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((key) => caches.delete(key)));
+      }
+      // A worker was controlling this page: reload once (guarded so we
+      // never loop) so the dev server serves a clean app.
+      if (
+        registrations.length > 0 &&
+        navigator.serviceWorker.controller &&
+        !sessionStorage.getItem('sw-cleanup-reloaded')
+      ) {
+        sessionStorage.setItem('sw-cleanup-reloaded', '1');
+        location.reload();
+      }
+    } catch {
+      // Best-effort cleanup; ignore failures.
+    }
+  };
+
   onMount(() => {
     // Always use the latest app config from the database.
     useAppConfigStore()?.fetchAndUpdateAppConfig();
     setListeners(true);
-    // Register the service worker in production (autoUpdate).
-    if (!dev) {
+    if (dev) {
+      void removeStaleServiceWorkers();
+    } else {
+      // Register the service worker in production (autoUpdate).
       registerSW({ immediate: true });
     }
     return () => setListeners(false);

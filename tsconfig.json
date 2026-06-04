@@ -10,7 +10,7 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "bundler",
-    // The ported Nuxt code imports types with plain `import {}` rather
+    // Some code imports types with plain `import {}` rather
     // than `import type {}`. Disabling verbatimModuleSyntax avoids
     // rewriting type imports across the whole codebase during the
     // migration. Can be re-enabled in a later cleanup if desired.

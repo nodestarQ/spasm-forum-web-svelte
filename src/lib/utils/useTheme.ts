@@ -1,5 +1,5 @@
 // Applies the admin-configured theme colors and favicon at
-// runtime. The Nuxt layout did this server-side via useHead; here
+// runtime. The previous app did this server-side; here
 // it runs client-side from the fetched app config (the static
 // :root defaults in app.css cover the initial server render).
 

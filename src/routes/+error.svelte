@@ -1,6 +1,6 @@
 <script lang="ts">
   // Rendered by SvelteKit for unmatched routes and thrown errors,
-  // replacing Nuxt's pages/_error.vue catch-all.
+  // catch-all for unmatched routes and thrown errors.
   import ExtraPageNotFound from '$lib/components/extra/ExtraPageNotFound.svelte';
 </script>
 

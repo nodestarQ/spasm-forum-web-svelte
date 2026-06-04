@@ -10,7 +10,7 @@ interface NotificationState {
   animationState?: 'starting' | 'leaving' | 'idle'
 }
 
-// Module-level singleton (was Nuxt useState). Toast notifications are
+// Module-level singleton. Toast notifications are
 // client-side ephemeral UI, so a shared module ref is fine.
 const notification = ref<NotificationState>({
   show: false,

@@ -35,17 +35,17 @@
     Feed
   </div>
   <div class="inline-block pl-1 lg:pl-2" onclick={() => hideFeed()}>
-    <a href="/" class="nuxt-link">Home</a>
+    <a href="/" class="app-link">Home</a>
   </div>
   {#if showNewPostButtonInMenu && enableNewWeb3ActionsAll && enableNewWeb3ActionsPost}
     <div class="inline-block">
       <div class="inline-block pl-1 lg:pl-2" onclick={() => hideFeed()}>
-        <a href="/newpost" class="nuxt-link">Publish</a>
+        <a href="/newpost" class="app-link">Publish</a>
       </div>
     </div>
   {/if}
   <div class="inline-block pl-1 lg:pl-2" onclick={() => hideFeed()}>
-    <a href="/contacts" class="nuxt-link">Contacts</a>
+    <a href="/contacts" class="app-link">Contacts</a>
   </div>
   {#if connectedAddress.value
     && typeof connectedAddress.value === 'string'
@@ -54,12 +54,12 @@
     && enableAdmin
     && isInList(connectedAddress.value, admins)}
     <div class="inline-block pl-1 lg:pl-2" onclick={() => hideFeed()}>
-      <a href="/admin" class="nuxt-link">Admin</a>
+      <a href="/admin" class="app-link">Admin</a>
     </div>
   {/if}
   {#if dev}
     <div class="inline-block pl-1 lg:pl-2" onclick={() => hideFeed()}>
-      <a href="/search" class="nuxt-link">Search</a>
+      <a href="/search" class="app-link">Search</a>
     </div>
   {/if}
   <div class="ml-2 mr-1 inline-block text-center float-right" onclick={() => showWeb3Modal()}>

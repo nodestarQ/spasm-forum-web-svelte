@@ -91,7 +91,7 @@
       <a
         href={`/news/${extractIdForDisplay(post)}`}
         onclick={() => hideFeed()}
-        class="nuxt-link text-colorNotImportant-light dark:text-colorNotImportant-dark"
+        class="app-link text-colorNotImportant-light dark:text-colorNotImportant-dark"
       >
         <span class="inline-block"><ExtraBlockies seed={addressValue} scale={2} /></span>
         {#if profilesStore.getMetadataByAddressNostr(addressValue, 'username') && profilesStore.getMetadataByAddressNostr(addressValue, 'username') !== 'none'}
@@ -112,7 +112,7 @@
   <div class="clr"></div>
 
   {#if extractIdForDisplay(post)}
-    <a href={`/news/${extractIdForDisplay(post)}`} class="nuxt-link">
+    <a href={`/news/${extractIdForDisplay(post)}`} class="app-link">
       {#if post.title}
         <span onclick={() => postClicked()}>{post.title.slice(0, 100)}</span>
       {/if}

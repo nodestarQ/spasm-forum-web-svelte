@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/public';
 
 /**
- * Central public config. Mirrors the old Nuxt runtimeConfig.public.
+ * Central public config for browser-exposed values.
  *
  * Values are read from $env/dynamic/public, which SvelteKit resolves
  * from the runtime environment on the server and injects into the
@@ -12,9 +12,9 @@ import { env } from '$env/dynamic/public';
  * Every value is a raw string (or undefined). Boolean/number/array
  * coercion happens downstream in the appConfig store via
  * parseEnvBool()/splitIntoArray(), unchanged from before. A handful of
- * keys keep the hardcoded fallbacks that nuxt.config.ts had.
+ * keys keep their hardcoded fallbacks.
  *
- * Env naming: the old `FOO` and `NUXT_PUBLIC_FOO` dual reads collapse
+ * Env naming: client config vars use a single
  * into a single `PUBLIC_FOO`. SvelteKit requires the PUBLIC_ prefix to
  * expose a variable to the browser. See .env.example.
  *
@@ -240,7 +240,7 @@ export const config = {
   pinnedIds: env.PUBLIC_PINNED_IDS,
 
   // Additional appConfig/AppConfig keys that the original frontend
-  // nuxt.config did not wire (so they were undefined under Nuxt).
+  // config did not wire (so they were previously undefined).
   // Wired here for completeness; mostly federation / spasm-module /
   // RSS-feed-channel options. Not yet in .env.example.
   faviconLink: env.PUBLIC_FAVICON_LINK,
@@ -262,7 +262,7 @@ export const config = {
   rssFeedChannelDescription: env.PUBLIC_RSS_FEED_CHANNEL_DESCRIPTION,
   rssFeedChannelImageLink: env.PUBLIC_RSS_FEED_CHANNEL_IMAGE_LINK,
 
-  // Colors (fallbacks match the old nuxt.config defaults; the CSS
+  // Colors (fallbacks match the default theme; the CSS
   // variables themselves live in app.css / the theme layer)
   colorPrimaryLight: env.PUBLIC_COLOR_PRIMARY_LIGHT || '#f420af',
   colorPrimaryDark: env.PUBLIC_COLOR_PRIMARY_DARK || '#f420af',

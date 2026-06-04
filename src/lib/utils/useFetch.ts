@@ -1,11 +1,11 @@
 /**
- * Minimal replacement for Nuxt's useFetch, covering the usage in the
+ * Minimal fetch wrapper, covering the usage in the
  * ported stores: GET a path (with an optional query object) and return
  * the parsed JSON shaped as { data: { value }, error: { value } } to
  * match the old `const { data, error } = await useFetch(path, { query })`
  * call sites (which read .value synchronously after the await).
  *
- * This is a plain fetch wrapper, not the SSR-aware Nuxt composable. The
+ * This is a plain fetch wrapper, not an SSR-aware composable. The
  * stores fetch on the client, so that is sufficient; richer loading can
  * move to SvelteKit load() functions later if needed.
  */
@@ -18,7 +18,7 @@ export const useFetch = async (
     const params = new URLSearchParams()
     for (const [key, value] of Object.entries(opts.query)) {
       // Include false (e.g. webType=false), skip only undefined/null,
-      // matching how Nuxt serialized these query params.
+      // matching how these query params are serialized.
       if (value !== undefined && value !== null) {
         params.append(key, String(value))
       }

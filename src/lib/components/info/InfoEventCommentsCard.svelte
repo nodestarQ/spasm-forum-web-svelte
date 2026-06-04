@@ -215,7 +215,7 @@
         {#if extractIdForDisplay(comment)}
           <a
             href={`/news/${extractIdForDisplay(comment)}`}
-            class="nuxt-link text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+            class="app-link text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
           >
             {#if comment.timestamp}
               ({toBeDate(comment.timestamp, 'short')})

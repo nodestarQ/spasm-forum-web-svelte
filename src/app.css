@@ -5,7 +5,7 @@
 /*
   Default theme color variables. The Tailwind color classes
   (colorPrimary, bgBase, etc.) map to these via tailwind.config.js.
-  Defaults match the old nuxt.config values. Env/admin overrides can
+  Defaults are the app default theme. Env/admin overrides can
   be layered on top later (see the layout TODO).
 */
 :root {
@@ -156,7 +156,7 @@
     border-color: theme('colors.colorPrimary.light');
   }
 
-  .nuxt-link {
+  .app-link {
     @apply text-colorBase-light dark:text-colorBase-dark hover:no-underline;
   }
 

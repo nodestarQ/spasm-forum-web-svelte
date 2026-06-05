@@ -7,11 +7,11 @@
 </script>
 
 <div
-  class="fixed top-0 bottom-0 left-0 right-0 grid justify-center bg-black bg-opacity-60 scrollbar-hide"
+  class="fixed top-0 bottom-0 left-0 right-0 grid justify-center bg-black/60 scrollbar-none"
   onclick={() => hideQrCodeModal()}
 >
   <div
-    class="mt-6 lg:mt-5 max-h-[28rem] overflow-scroll bg-bgSecondary-light dark:bg-bgSecondary-dark block w-80 text-center relative scrollbar-hide"
+    class="mt-6 lg:mt-5 max-h-112 overflow-scroll bg-bgSecondary-light dark:bg-bgSecondary-dark block w-80 text-center relative scrollbar-none"
     onclick={(e) => e.stopPropagation()}
   >
     <span
@@ -25,7 +25,7 @@
         <ExtraQrCode value={qrCodeValue.value} />
       {/if}
     </div>
-    <div class="mt-2 mb-6 mx-9 overflow-auto overflow-wrap break-words text-start">
+    <div class="mt-2 mb-6 mx-9 overflow-auto overflow-wrap wrap-break-word text-start">
       {qrCodeValue.value}
       {#if qrCodeValue.value}
         <ExtraAddressIcons

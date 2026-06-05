@@ -89,11 +89,11 @@
 </script>
 
 <div
-  class="fixed top-0 bottom-0 left-0 right-0 grid justify-center bg-black bg-opacity-60 scrollbar-hide"
+  class="fixed top-0 bottom-0 left-0 right-0 grid justify-center bg-black/60 scrollbar-none"
   onclick={() => hideWeb3Modal()}
 >
   <div
-    class="mt-2 lg:mt-5 max-h-[33rem] overflow-scroll bg-bgSecondary-light dark:bg-bgSecondary-dark block w-80 text-center relative scrollbar-hide"
+    class="mt-2 lg:mt-5 max-h-132 overflow-scroll bg-bgSecondary-light dark:bg-bgSecondary-dark block w-80 text-center relative scrollbar-none"
     onclick={(e) => e.stopPropagation()}
   >
     <span

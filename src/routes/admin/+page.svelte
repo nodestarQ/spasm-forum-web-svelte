@@ -368,7 +368,7 @@
   };
 </script>
 
-<div class="overflow-auto overflow-wrap break-words">
+<div class="overflow-auto overflow-wrap wrap-break-word">
   <div class="mt-4">
     <div class="my-4">
       <div>
@@ -775,7 +775,7 @@
         <div>Whatsapp: <input bind:value={form.whatsappNumber} type="text" placeholder="enter number" class="custom-admin-input-socials" /></div>
         <div>XMPP: <input bind:value={form.xmppName} type="text" placeholder="enter username" class="custom-admin-input-socials" /></div>
         <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Note: extra info supports markdown, but not <code>\n</code></div>
-        <div>Extra info: <textarea bind:value={form.extraContactInfo} placeholder="enter any extra info (markdown links supported)" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea></div>
+        <div>Extra info: <textarea bind:value={form.extraContactInfo} placeholder="enter any extra info (markdown links supported)" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea></div>
         <div class="mt-2 mb-6">
           <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" onclick={() => (showSocialMediaNames = !showSocialMediaNames)}>
             hide section
@@ -842,7 +842,7 @@
         </div>
         <div class="mt-4 ml-5">
           Categories ({count(form.envCategories)})
-          <textarea bind:value={form.envCategories} placeholder="defi,privacy,tech,memes" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-24 lg:h-24 focus:outline-none rounded-b-lg border-2"></textarea>
+          <textarea bind:value={form.envCategories} placeholder="defi,privacy,tech,memes" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-24 lg:h-24 focus:outline-hidden rounded-b-lg border-2"></textarea>
         </div>
 
         <div class="mt-2 mb-6">
@@ -907,7 +907,7 @@
           <div>
             List of Spasm IDs of pinned events
             ({count(form.pinnedIds)})
-            <textarea bind:value={form.pinnedIds} placeholder="0x123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+            <textarea bind:value={form.pinnedIds} placeholder="0x123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
           </div>
         </div>
         <div class="mt-4 pl-4">
@@ -958,7 +958,7 @@
           <div>
             List of moderators
             ({count(form.moderators)})
-            <textarea bind:value={form.moderators} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+            <textarea bind:value={form.moderators} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
           </div>
         </div>
         <div class="mt-4 pl-4">
@@ -968,28 +968,28 @@
               <input bind:checked={form.enableWhitelistForActionPost} type="checkbox" />
               enable whitelist for new posts
               ({count(form.whitelistedForActionPost)})
-              <textarea bind:value={form.whitelistedForActionPost} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+              <textarea bind:value={form.whitelistedForActionPost} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
             <div class="mt-4">
               <input bind:checked={form.enableWhitelistForActionReply} type="checkbox" />
               enable whitelist for new replies
               <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(comments)</span>
               ({count(form.whitelistedForActionReply)})
-              <textarea bind:value={form.whitelistedForActionReply} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+              <textarea bind:value={form.whitelistedForActionReply} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
             <div class="mt-4">
               <input bind:checked={form.enableWhitelistForActionReact} type="checkbox" />
               enable whitelist for new reactions
               <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(upvote, downvote, etc.)</span>
               ({count(form.whitelistedForActionReact)})
-              <textarea bind:value={form.whitelistedForActionReact} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+              <textarea bind:value={form.whitelistedForActionReact} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
             <div class="mt-4">
               <input bind:checked={form.enableWhitelistForActionOther} type="checkbox" />
               enable whitelist for new other actions
               <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(any non-standard event)</span>
               ({count(form.whitelistedForActionOther)})
-              <textarea bind:value={form.whitelistedForActionOther} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+              <textarea bind:value={form.whitelistedForActionOther} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
           </div>
         </div>
@@ -1158,7 +1158,7 @@
                       <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">url1,url2,url3,url4,url5</div>
                       <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Advanced template:</div>
                       <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">url1|category|frequency|network|name|showSource,url2|category,url3||||name,url4</div>
-                      <textarea bind:value={form.federationCustomLinks} placeholder="https://degenrocket.space/api/events?activity=rising,https://thedefiant.io/api/feed|defi" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"></textarea>
+                      <textarea bind:value={form.federationCustomLinks} placeholder="https://degenrocket.space/api/events?activity=rising,https://thedefiant.io/api/feed|defi" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
                     </div>
                   {/if}
                 </div>

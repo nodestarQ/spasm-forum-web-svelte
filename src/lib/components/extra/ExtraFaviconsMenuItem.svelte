@@ -30,7 +30,7 @@
   {#if imgSrc}
     <img src={imgSrc} alt={favicon} class="inline pr-1 w-5 h-5 object-contain" />
   {:else}
-    <span class="w-5 h-5 bg-gray-300 dark:bg-gray-700 rounded-sm"></span>
+    <span class="w-5 h-5 bg-gray-300 dark:bg-gray-700 rounded-xs"></span>
   {/if}
   <span>{favicon}</span>
 </div>

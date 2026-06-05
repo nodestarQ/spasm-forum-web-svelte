@@ -246,7 +246,7 @@
     <textarea
       bind:value={filterIds}
       placeholder="note1,note2,3827,4730"
-      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
     ></textarea>
   </div>
 
@@ -256,7 +256,7 @@
     <textarea
       bind:value={filterAuthors}
       placeholder="npub1,npub2,1234,5678"
-      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
     ></textarea>
   </div>
 
@@ -266,7 +266,7 @@
     <textarea
       bind:value={filterKinds}
       placeholder="0,1,10002"
-      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[40%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[40%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
     ></textarea>
   </div>
 
@@ -276,7 +276,7 @@
     <textarea
       bind:value={filterTagsE}
       placeholder="note1,note2,3827,4730"
-      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
     ></textarea>
   </div>
 
@@ -286,7 +286,7 @@
     <textarea
       bind:value={filterTagsP}
       placeholder="npub1,npub2,1234,5678"
-      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[90%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
     ></textarea>
   </div>
 
@@ -296,7 +296,7 @@
     <textarea
       bind:value={filterLimit}
       placeholder="10"
-      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[40%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+      class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[40%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
     ></textarea>
   </div>
 
@@ -309,7 +309,7 @@
       <textarea
         bind:value={filterTagsExtra1Name}
         placeholder="o"
-        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-24 h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-24 h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
       ></textarea>
     </div>
     <div>
@@ -317,7 +317,7 @@
       <textarea
         bind:value={filterTagsExtra1Value}
         placeholder="value1,value2,value3,value4"
-        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[80%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[80%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
       ></textarea>
     </div>
     <!-- Extra tag 2 -->
@@ -326,7 +326,7 @@
       <textarea
         bind:value={filterTagsExtra2Name}
         placeholder="i"
-        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-24 h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-24 h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
       ></textarea>
     </div>
     <div>
@@ -334,7 +334,7 @@
       <textarea
         bind:value={filterTagsExtra2Value}
         placeholder="value1,value2,value3,value4"
-        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[80%] max-w-[700px] h-8 rounded-b-lg focus:outline-none border-bgSecondary-light dark:border-bgSecondary-dark border"
+        class="p-1 bg-bgBase-light dark:bg-bgBase-dark w-[80%] max-w-[700px] h-8 rounded-b-lg focus:outline-hidden border-bgSecondary-light dark:border-bgSecondary-dark border"
       ></textarea>
     </div>
   </div>

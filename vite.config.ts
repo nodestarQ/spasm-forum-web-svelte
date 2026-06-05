@@ -1,5 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { loadEnv } from 'vite';
 
@@ -29,6 +30,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      tailwindcss(),
       sveltekit(),
       // Skip the PWA plugin under vitest to keep the test run clean.
       ...(mode === 'test'

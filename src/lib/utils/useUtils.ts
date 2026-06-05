@@ -975,7 +975,7 @@ export const useUtils = () => {
       "quantum",
       "scaling",
       "secure",
-      "shadow",
+      "shadow-sm",
       "silver",
       "stable",
       "swapping",

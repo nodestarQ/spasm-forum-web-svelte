@@ -510,7 +510,7 @@
       <input
         bind:value={userInputTitle}
         placeholder={titlePlaceholder}
-        class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] focus:outline-none border-2 {errorTitle ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''}"
+        class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] focus:outline-hidden border-2 {errorTitle ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''}"
       />
     {/if}
 
@@ -521,7 +521,7 @@
     <textarea
       bind:value={userInput}
       placeholder={bodyPlaceholder}
-      class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-48 focus:outline-none rounded-b-lg border-2 {errorBody ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''}"
+      class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-48 focus:outline-hidden rounded-b-lg border-2 {errorBody ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''}"
     ></textarea>
 
     <!-- MORE OPTIONS -->
@@ -559,7 +559,7 @@
                     <input
                       bind:value={userInputTipsMonero}
                       placeholder="Monero address"
-                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-hidden border-2"
                     />
                   </div>
                 {/if}
@@ -571,7 +571,7 @@
                     <input
                       bind:value={userInputTipsZcash}
                       placeholder="Zcash address"
-                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-hidden border-2"
                     />
                   </div>
                 {/if}
@@ -583,7 +583,7 @@
                     <input
                       bind:value={userInputTipsEthereum}
                       placeholder="Ethereum address"
-                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-hidden border-2"
                     />
                   </div>
                 {/if}
@@ -595,7 +595,7 @@
                     <input
                       bind:value={userInputTipsBitcoin}
                       placeholder="Bitcoin address"
-                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-hidden border-2"
                     />
                   </div>
                 {/if}
@@ -607,7 +607,7 @@
                     <input
                       bind:value={userInputTipsSolana}
                       placeholder="Solana address"
-                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                      class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-hidden border-2"
                     />
                   </div>
                 {/if}

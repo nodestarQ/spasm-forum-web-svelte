@@ -150,7 +150,7 @@
 
 {#if comment}
   <div class="fade-in-custom ml-4 mt-2 mb-4 border-l-2 border-bgSecondary-light dark:border-bgSecondary-dark">
-    <div class="overflow-auto overflow-wrap break-words">
+    <div class="overflow-auto overflow-wrap wrap-break-word">
       <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
         {#if addressValue && addressForDisplay}
           <span>

@@ -238,7 +238,7 @@
         <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
           Event ID:
         </div>
-        <div class="overflow-auto overflow-wrap break-words">
+        <div class="overflow-auto overflow-wrap wrap-break-word">
           {eventId}
           <ExtraAddressIcons
             value={eventId}

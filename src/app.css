@@ -1,12 +1,57 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@source './**/*.{html,js,svelte,ts}';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-colorBase-light: var(--color-base-light);
+  --color-colorBase-dark: var(--color-base-dark);
+
+  --color-colorPrimary-light: var(--color-primary-light);
+  --color-colorPrimary-dark: var(--color-primary-dark);
+
+  --color-colorSecondary-light: var(--color-secondary-light);
+  --color-colorSecondary-dark: var(--color-secondary-dark);
+
+  --color-colorHover-light: var(--color-hover-light);
+  --color-colorHover-dark: var(--color-hover-dark);
+
+  --color-colorNotImportant-light: var(--color-not-important-light);
+  --color-colorNotImportant-dark: var(--color-not-important-dark);
+
+  --color-colorGreen-light: var(--color-green-light);
+  --color-colorGreen-dark: var(--color-green-dark);
+
+  --color-colorRed-light: var(--color-red-light);
+  --color-colorRed-dark: var(--color-red-dark);
+
+  --color-colorOrange-light: var(--color-orange-light);
+  --color-colorOrange-dark: var(--color-orange-dark);
+
+  --color-colorBlue-light: var(--color-blue-light);
+  --color-colorBlue-dark: var(--color-blue-dark);
+
+  --color-bgBase-light: var(--bg-base-light);
+  --color-bgBase-dark: var(--bg-base-dark);
+
+  --color-bgSecondary-light: var(--bg-secondary-light);
+  --color-bgSecondary-dark: var(--bg-secondary-dark);
+
+  --color-bgHover-light: var(--bg-hover-light);
+  --color-bgHover-dark: var(--bg-hover-dark);
+
+  --color-bgDark-light: var(--bg-dark-light);
+  --color-bgDark-dark: var(--bg-dark-dark);
+
+  --color-borderColor-light: var(--border-color-light);
+  --color-borderColor-dark: var(--border-color-dark);
+}
 
 /*
-  Default theme color variables. The Tailwind color classes
-  (colorPrimary, bgBase, etc.) map to these via tailwind.config.js.
-  Defaults are the app default theme. Env/admin overrides can
-  be layered on top later (see the layout TODO).
+  Default theme color values that the @theme mappings above point at.
+  Env/admin overrides are applied at runtime as inline styles on <html>
+  (see applyThemeColors in useTheme.ts), which always win over these.
 */
 :root {
   --color-primary-light: #f420af;
@@ -28,7 +73,7 @@
   --color-blue-light: #3a3dff;
   --color-blue-dark: #3a3dff;
   --bg-base-light: #fafafa;
-  --bg-base-dark: #0F0F0F;
+  --bg-base-dark: #0f0f0f;
   --bg-secondary-light: #f0f0f0;
   --bg-secondary-dark: #181818;
   --bg-hover-light: #e3e3e3;
@@ -39,9 +84,76 @@
   --border-color-dark: #312d3e;
 }
 
-/* disable scrollbar in Chrome, Safari, Brave */
-::-webkit-scrollbar {
-  display: none;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility test-class-from-tailwindcss {
+  font-size: 20px;
+  @apply border-2;
+  border-color: var(--color-colorPrimary-light);
+}
+
+@utility app-link {
+  @apply text-colorBase-light dark:text-colorBase-dark hover:no-underline;
+}
+
+@utility custom-icons {
+  @apply w-5 inline-block;
+}
+
+@utility custom-icons-large {
+  @apply w-6 inline-block;
+}
+
+@utility custom-icons-xl {
+  @apply w-7 inline-block;
+}
+
+@utility custom-icons-xxl {
+  @apply w-8 inline-block;
+}
+
+@utility custom-admin-input-socials {
+  @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[70%] lg:w-[60%] max-w-[700px] focus:outline-hidden border-2;
+}
+
+@utility custom-admin-input-socials-tiny {
+  @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[20%] lg:w-[20%] max-w-[100px] focus:outline-hidden border-2;
+}
+
+@utility custom-color-picker {
+  @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark focus:outline-hidden border-2;
+}
+
+@utility custom-admin-web-panel-section {
+  @apply my-2 py-4 border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark;
+}
+
+@utility custom-invert-base-colors {
+  @apply text-colorSecondary-dark dark:text-colorSecondary-light;
+  @apply bg-bgBase-dark dark:bg-bgBase-light;
+}
+
+@layer utilities {
+  /* disable scrollbar in Chrome, Safari, Brave */
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer base {
@@ -122,11 +234,11 @@
   }
 
   pre {
-    @apply px-4 py-4 overflow-auto text-colorBase-light dark:text-colorBase-light bg-bgDark-light dark:bg-bgDark-light rounded font-mono;
+    @apply px-4 py-4 overflow-auto text-colorBase-light dark:text-colorBase-light bg-bgDark-light dark:bg-bgDark-light rounded-sm font-mono;
   }
 
   code {
-    @apply text-colorBase-light dark:text-colorBase-light bg-bgDark-light dark:bg-bgDark-light px-0.5 py-1 rounded font-mono;
+    @apply text-colorBase-light dark:text-colorBase-light bg-bgDark-light dark:bg-bgDark-light px-0.5 py-1 rounded-sm font-mono;
   }
 
   br {
@@ -143,68 +255,5 @@
 
   td {
     @apply px-4 py-2 border text-left;
-  }
-}
-
-@layer components {
-  .btn  {
-  }
-
-  .test-class-from-tailwindcss {
-    font-size: 20px;
-    @apply border-2;
-    border-color: theme('colors.colorPrimary.light');
-  }
-
-  .app-link {
-    @apply text-colorBase-light dark:text-colorBase-dark hover:no-underline;
-  }
-
-  .custom-icons {
-    @apply w-5 inline-block;
-  }
-
-  .custom-icons-large {
-    @apply w-6 inline-block;
-  }
-
-  .custom-icons-xl {
-    @apply w-7 inline-block;
-  }
-
-  .custom-icons-xxl {
-    @apply w-8 inline-block;
-  }
-
-  .custom-admin-input-socials {
-    @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[70%] lg:w-[60%] max-w-[700px] focus:outline-none border-2
-  }
-
-  .custom-admin-input-socials-tiny {
-    @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[20%] lg:w-[20%] max-w-[100px] focus:outline-none border-2
-  }
-
-  .custom-color-picker {
-    @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark focus:outline-none border-2
-  }
-
-  .custom-admin-web-panel-section {
-    @apply my-2 py-4 border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark
-  }
-}
-
-@layer utilities {
-  .custom-invert-base-colors {
-    @apply text-colorSecondary-dark dark:text-colorSecondary-light;
-    @apply bg-bgBase-dark dark:bg-bgBase-light
-  }
-
-  /* Hide scrollbar across browsers (used by the modals) */
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
   }
 }

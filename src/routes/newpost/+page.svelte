@@ -31,7 +31,7 @@
   });
 </script>
 
-<div class="my-4 mx-2 overflow-auto overflow-wrap break-words">
+<div class="my-4 mx-2 overflow-auto overflow-wrap wrap-break-word">
   {#if enableNewWeb3ActionsAll && enableNewWeb3ActionsPost}
     {#if connectedAddress.value && typeof connectedAddress.value === 'string'}
       <div class="mt-2 mb-4">

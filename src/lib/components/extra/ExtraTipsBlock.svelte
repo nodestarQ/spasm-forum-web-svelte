@@ -55,7 +55,7 @@
 </script>
 
 {#if isArrayWithValues(event?.tips)}
-  <div class="overflow-auto overflow-wrap break-words {className}">
+  <div class="overflow-auto overflow-wrap wrap-break-word {className}">
     <div class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark">
       {#if showTipsText}
         <span class="font-bold">Tips:</span>

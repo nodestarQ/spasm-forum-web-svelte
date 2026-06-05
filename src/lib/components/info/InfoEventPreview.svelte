@@ -123,7 +123,7 @@
 </script>
 
 {#if event}
-  <div class="overflow-auto overflow-wrap break-words {className}">
+  <div class="overflow-auto overflow-wrap wrap-break-word {className}">
     {#if event.title}
       <div class="text-2xl my-1">{event.title}</div>
     {/if}
@@ -302,7 +302,7 @@
             <input
               bind:value={customApiUrl}
               placeholder="Enter URL of another instance"
-              class="inline p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[80%] max-w-[320px] focus:outline-none border-2 mr-4 {errorCustomApiUrl ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''}"
+              class="inline p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[80%] max-w-[320px] focus:outline-hidden border-2 mr-4 {errorCustomApiUrl ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''}"
             />
             <button
               class="inline my-4 px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark"

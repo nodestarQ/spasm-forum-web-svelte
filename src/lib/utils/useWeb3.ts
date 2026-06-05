@@ -140,10 +140,12 @@ export const useWeb3 = () => {
     isMultiSign.value = false
   }
 
-  const connectWeb3Authenticator = async (): Promise<boolean> => {
+  const connectWeb3Authenticator = async (
+    injected?: any
+  ): Promise<boolean> => {
     pendingAuthentication.value = true
     try {
-      await detectProvider()
+      await detectProvider(injected)
       await setSigner()
       const accounts: JsonRpcSigner[] | undefined = await listAccounts()
 
@@ -163,11 +165,17 @@ export const useWeb3 = () => {
     }
   }
 
-  const detectProvider = async (): Promise<boolean> => {
+  const detectProvider = async (
+    injected?: any
+  ): Promise<boolean> => {
     // provider.value = await detectEthereumProvider()
     // TODO use RPC provider if BrowserProvider is not detected
-    if (window?.ethereum) {
-      provider = new ethers.BrowserProvider(window.ethereum)
+    // `injected` is a specific EIP-1193 provider discovered via
+    // EIP-6963 (see useWalletDiscovery). Without it, fall back to
+    // window.ethereum, i.e. whichever wallet won that single slot.
+    const eip1193 = injected ?? window?.ethereum
+    if (eip1193) {
+      provider = new ethers.BrowserProvider(eip1193)
       return provider ? true : false
     }
     isWeb3ModalShown.value = true

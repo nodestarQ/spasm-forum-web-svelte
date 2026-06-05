@@ -2,7 +2,9 @@
   import { useNotificationStore } from '$lib/stores/useNotificationStore';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
   import { useWeb3 } from '$lib/utils/useWeb3';
+  import { useWalletDiscovery } from '$lib/utils/useWalletDiscovery';
   import IconsUser from '$lib/components/icons/IconsUser.svelte';
+  import { onMount } from 'svelte';
 
   const appConfig = useAppConfigStore()?.getAppConfig;
   const notificationStore = useNotificationStore();
@@ -16,6 +18,22 @@
   const ifAllowGuestLogin = appConfig?.ifAllowGuestLogin;
   const enableNewNostrActionsAll = appConfig?.enableNewNostrActionsAll;
   const enableNewEthereumActionsAll = appConfig?.enableNewEthereumActionsAll;
+
+  // EIP-6963: discover every injected wallet instead of guessing
+  // from the single window.ethereum slot.
+  const { wallets, discover } = useWalletDiscovery();
+  onMount(discover);
+
+  const walletClicked = async (provider: any) => {
+    try {
+      const res = await connectWeb3Authenticator(provider);
+      if (res) {
+        hideWeb3Modal();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const browserExtensionClicked = async () => {
     const web3 = window.ethereum;
@@ -108,27 +126,26 @@
         Ethereum browser extensions:
       </div>
 
-      <div
-        class="block mt-2 mb-1 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-        onclick={() => browserExtensionClicked()}
-      >
-        <img class="inline-block w-8" src="/images/logos/metamask-logo.svg" alt="MetaMask logo" />
-        MetaMask
-      </div>
+      {#each wallets.value as wallet (wallet.info.rdns)}
+        <div
+          class="block mt-2 mb-1 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
+          onclick={() => walletClicked(wallet.provider)}
+        >
+          <img class="inline-block w-8" src={wallet.info.icon} alt={wallet.info.name} />
+          {wallet.info.name}
+        </div>
+      {/each}
 
-      <div
-        class="block mb-2 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-        onclick={() => browserExtensionClicked()}
-      >
-        <img class="inline-block h-11" src="/images/logos/rabby-logo.svg" alt="Rabby logo" />
-      </div>
-
-      <div
-        class="block mb-4 h-8 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-        onclick={() => browserExtensionClicked()}
-      >
-        Another Ethereum extension
-      </div>
+      {#if wallets.value.length === 0}
+        <!-- Fallback for wallets that don't support EIP-6963 yet:
+             connect through the single window.ethereum slot. -->
+        <div
+          class="block mt-2 mb-4 h-8 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
+          onclick={() => browserExtensionClicked()}
+        >
+          Other Ethereum extension
+        </div>
+      {/if}
     {/if}
 
     <!-- Nostr -->

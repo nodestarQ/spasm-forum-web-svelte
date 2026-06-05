@@ -8,4 +8,4 @@
 
 <!-- Lucide chevron-down wrapped to keep the rotateIf API used by the
      collapsible toggles (admin panels, dropdowns, advanced options). -->
-<ChevronDown class="inline w-5 h-5 {rotateIf ? 'rotate-180' : ''} {className}" />
+<ChevronDown class="inline w-5 h-5 transition-transform duration-200 {rotateIf ? 'rotate-180' : ''} {className}" />

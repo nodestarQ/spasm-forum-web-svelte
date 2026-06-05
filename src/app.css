@@ -144,6 +144,32 @@
   @apply my-2 py-4 border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark;
 }
 
+/* Admin accordion cards: each main section is a card that lifts and
+   grows a little when opened. */
+@utility admin-card {
+  @apply mb-2 rounded-sm border border-borderColor-light dark:border-borderColor-dark bg-bgSecondary-light dark:bg-bgSecondary-dark overflow-hidden transition duration-200;
+}
+
+@utility admin-card-open {
+  @apply shadow-lg scale-[1.01];
+}
+
+@utility admin-card-header {
+  @apply w-full flex items-center justify-between gap-2 px-5 py-4 text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer transition-colors;
+}
+
+@utility admin-card-body {
+  @apply px-5 pb-5;
+}
+
+/* Active card highlights via its header text, not a colored border. */
+.admin-card-open .admin-card-header {
+  color: var(--color-colorPrimary-light);
+}
+.dark .admin-card-open .admin-card-header {
+  color: var(--color-colorPrimary-dark);
+}
+
 @utility custom-invert-base-colors {
   @apply text-colorSecondary-dark dark:text-colorSecondary-light;
   @apply bg-bgBase-dark dark:bg-bgBase-light;

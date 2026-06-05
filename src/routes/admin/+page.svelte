@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { slide } from 'svelte/transition';
   import type { AppConfig } from '$lib/types/interfaces';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
   import { useNotificationStore } from '$lib/stores/useNotificationStore';
@@ -446,18 +447,14 @@
     </div>
 
     <!-- Theme -->
-    <div>
-      <span
-        class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
-        onclick={() => (showTheme = !showTheme)}
-      >
-        Theme
+    <div class="admin-card {showTheme ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showTheme = !showTheme)}>
+        <span>Theme</span>
         <IconsTriangle rotateIf={showTheme} />
-      </span>
-    </div>
+      </button>
 
     {#if showTheme}
-      <div class="pl-4 pt-4 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <!-- Favicons -->
         <div class="mt-0 mb-4">
           <div class="mt-2">
@@ -469,7 +466,7 @@
           </div>
 
           {#if faviconDropDownShown}
-            <div class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28">
+            <div transition:slide={{ duration: 250 }} class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28">
               {#each favicons as favicon}
                 <ExtraFaviconsMenuItem {favicon} onclick={() => selectFavicon(favicon)} />
               {/each}
@@ -497,7 +494,7 @@
           </div>
 
           {#if themeDropDownShown}
-            <div class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28">
+            <div transition:slide={{ duration: 250 }} class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28">
               {#each themes as themeName}
                 <div
                   class="py-1 font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
@@ -525,7 +522,7 @@
         </div>
 
         {#if showAdvancedColors}
-          <div class="pl-4">
+          <div transition:slide={{ duration: 250 }} class="pl-4">
             <div class="mt-2 ml-5">
               <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
                 For each color you can specify values for dark and light themes
@@ -584,17 +581,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Home page -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" onclick={() => (showHomePage = !showHomePage)}>
-        Home page
-        <IconsTriangle rotateIf={showHomePage} />
-      </span>
     </div>
 
+    <!-- Home page -->
+    <div class="admin-card {showHomePage ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showHomePage = !showHomePage)}>
+        <span>Home page</span>
+        <IconsTriangle rotateIf={showHomePage} />
+      </button>
+
     {#if showHomePage}
-      <div class="pl-4 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div class="pl-0 mt-2">
           <div class="pl-0 mt-2">
             <input bind:checked={form.enableDefaultHeaderImage} type="checkbox" />
@@ -696,17 +693,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Social media links -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showSocialMediaLinks = !showSocialMediaLinks)}>
-        Social media links
-        <IconsTriangle rotateIf={showSocialMediaLinks} />
-      </span>
     </div>
 
+    <!-- Social media links -->
+    <div class="admin-card {showSocialMediaLinks ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showSocialMediaLinks = !showSocialMediaLinks)}>
+        <span>Social media links</span>
+        <IconsTriangle rotateIf={showSocialMediaLinks} />
+      </button>
+
     {#if showSocialMediaLinks}
-      <div class="pl-4 pt-4 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div>Another website: <input bind:value={form.anotherWebsiteLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
         <div>IPFS: <input bind:value={form.ipfsLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
         <div>Tor: <input bind:value={form.torLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
@@ -748,17 +745,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Social media names -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showSocialMediaNames = !showSocialMediaNames)}>
-        Social media names
-        <IconsTriangle rotateIf={showSocialMediaNames} />
-      </span>
     </div>
 
+    <!-- Social media names -->
+    <div class="admin-card {showSocialMediaNames ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showSocialMediaNames = !showSocialMediaNames)}>
+        <span>Social media names</span>
+        <IconsTriangle rotateIf={showSocialMediaNames} />
+      </button>
+
     {#if showSocialMediaNames}
-      <div class="pl-4 pt-4 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div>Nostr npub: <input bind:value={form.nostrNpub} type="text" placeholder="enter npub" class="custom-admin-input-socials" /></div>
         <div>Session: <input bind:value={form.sessionName} type="text" placeholder="enter username" class="custom-admin-input-socials" /></div>
         <div>Matrix: <input bind:value={form.matrixName} type="text" placeholder="enter username" class="custom-admin-input-socials" /></div>
@@ -784,17 +781,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Blockchain links -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showBlockchainLinks = !showBlockchainLinks)}>
-        Blockchain links
-        <IconsTriangle rotateIf={showBlockchainLinks} />
-      </span>
     </div>
 
+    <!-- Blockchain links -->
+    <div class="admin-card {showBlockchainLinks ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showBlockchainLinks = !showBlockchainLinks)}>
+        <span>Blockchain links</span>
+        <IconsTriangle rotateIf={showBlockchainLinks} />
+      </button>
+
     {#if showBlockchainLinks}
-      <div class="pl-4 pt-4 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div>Uniswap: <input bind:value={form.uniswapLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
         <div>Sushiswap: <input bind:value={form.sushiswapLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
         <div>Etherscan: <input bind:value={form.etherscanLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
@@ -813,17 +810,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Feed settings -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showFeedSettings = !showFeedSettings)}>
-        Feed settings
-        <IconsTriangle rotateIf={showFeedSettings} />
-      </span>
     </div>
 
+    <!-- Feed settings -->
+    <div class="admin-card {showFeedSettings ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showFeedSettings = !showFeedSettings)}>
+        <span>Feed settings</span>
+        <IconsTriangle rotateIf={showFeedSettings} />
+      </button>
+
     {#if showFeedSettings}
-      <div class="pl-5 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <h5 class="mt-2">Feed activity filters</h5>
         <div class="ml-5">
           <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
@@ -853,17 +850,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Other -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showOther = !showOther)}>
-        Other
-        <IconsTriangle rotateIf={showOther} />
-      </span>
     </div>
 
+    <!-- Other -->
+    <div class="admin-card {showOther ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showOther = !showOther)}>
+        <span>Other</span>
+        <IconsTriangle rotateIf={showOther} />
+      </button>
+
     {#if showOther}
-      <div class="pt-4 pl-5 custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div>
           <input bind:checked={form.enableShortUrlsForWeb3Actions} type="checkbox" />
           enable short URLs for Spasm IDs (recommended length is 30+ chars)
@@ -884,17 +881,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- New content -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showNewContent = !showNewContent)}>
-        New Content
-        <IconsTriangle rotateIf={showNewContent} />
-      </span>
     </div>
 
+    <!-- New content -->
+    <div class="admin-card {showNewContent ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showNewContent = !showNewContent)}>
+        <span>New Content</span>
+        <IconsTriangle rotateIf={showNewContent} />
+      </button>
+
     {#if showNewContent}
-      <div class="custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div class="hidden mt-2 pl-4">
           RSS module:
           <div class="pl-4">
@@ -1001,17 +998,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Media content -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showMediaContent = !showMediaContent)}>
-        Media content
-        <IconsTriangle rotateIf={showMediaContent} />
-      </span>
     </div>
 
+    <!-- Media content -->
+    <div class="admin-card {showMediaContent ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showMediaContent = !showMediaContent)}>
+        <span>Media content</span>
+        <IconsTriangle rotateIf={showMediaContent} />
+      </button>
+
     {#if showMediaContent}
-      <div class="custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div class="mt-2 pl-4">
           <div class="mt-2 pl-0">
             <div class="mt-2 pl-0">
@@ -1070,17 +1067,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- RSS feed channel -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showRssFeedChannel = !showRssFeedChannel)}>
-        RSS Channel
-        <IconsTriangle rotateIf={showRssFeedChannel} />
-      </span>
     </div>
 
+    <!-- RSS feed channel -->
+    <div class="admin-card {showRssFeedChannel ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showRssFeedChannel = !showRssFeedChannel)}>
+        <span>RSS Channel</span>
+        <IconsTriangle rotateIf={showRssFeedChannel} />
+      </button>
+
     {#if showRssFeedChannel}
-      <div class="custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div class="mt-2 pl-4">
           <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Configure your RSS channel so users can follow your instance with legacy tech</span>
           <div class="mt-2 pl-0">
@@ -1106,17 +1103,17 @@
         </div>
       </div>
     {/if}
-
-    <!-- Federation -->
-    <div>
-      <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showFederation = !showFederation)}>
-        Federation
-        <IconsTriangle rotateIf={showFederation} />
-      </span>
     </div>
 
+    <!-- Federation -->
+    <div class="admin-card {showFederation ? 'admin-card-open' : ''}">
+      <button type="button" class="admin-card-header" onclick={() => (showFederation = !showFederation)}>
+        <span>Federation</span>
+        <IconsTriangle rotateIf={showFederation} />
+      </button>
+
     {#if showFederation}
-      <div class="custom-admin-web-panel-section">
+      <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div class="mt-2 pl-4">
           <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">You can enable federation to automatically fetch events (posts, comments) from other instances.</span>
           <div class="mt-2 pl-0">
@@ -1180,6 +1177,7 @@
         </div>
       </div>
     {/if}
+    </div>
 
     <!-- Response -->
     <div class="my-4">

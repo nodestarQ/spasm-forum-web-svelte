@@ -6,8 +6,8 @@
   import IconsCryptoEthereum from '$lib/components/icons/IconsCryptoEthereum.svelte';
   import IconsCryptoBitcoin from '$lib/components/icons/IconsCryptoBitcoin.svelte';
   import IconsCryptoSolana from '$lib/components/icons/IconsCryptoSolana.svelte';
-  import IconsCopyToClipboard from '$lib/components/icons/IconsCopyToClipboard.svelte';
-  import IconsCheck from '$lib/components/icons/IconsCheck.svelte';
+  import IconsCopyToClipboard from '@lucide/svelte/icons/copy';
+  import IconsCheck from '@lucide/svelte/icons/check';
 
   const { copyToClipboard, isArrayWithValues } = useUtils();
 

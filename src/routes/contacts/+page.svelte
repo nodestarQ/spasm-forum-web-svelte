@@ -2,7 +2,7 @@
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
   import DefaultContacts from '$lib/components/default/DefaultContacts.svelte';
   import CustomContacts from '$lib/components/custom/CustomContacts.svelte';
-  import IconsRocket from '$lib/components/icons/IconsRocket.svelte';
+  import IconsRocket from '@lucide/svelte/icons/rocket';
 
   const appConfig = useAppConfigStore()?.getAppConfig;
   const ifShowDevelopersInfo = appConfig?.ifShowDevelopersInfo;

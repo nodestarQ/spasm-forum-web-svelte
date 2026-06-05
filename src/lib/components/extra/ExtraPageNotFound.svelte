@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import IconsArrowLeft from '$lib/components/icons/IconsArrowLeft.svelte';
-  import IconsRocket from '$lib/components/icons/IconsRocket.svelte';
+  import IconsArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import IconsRocket from '@lucide/svelte/icons/rocket';
 
   let { error }: { error?: any } = $props();
 

@@ -7,7 +7,7 @@
   import { useNostr } from '$lib/utils/useNostr';
   import { useUtils } from '$lib/utils/useUtils';
   import IconsTriangle from '$lib/components/icons/IconsTriangle.svelte';
-  import IconsReset from '$lib/components/icons/IconsReset.svelte';
+  import IconsReset from '@lucide/svelte/icons/refresh-cw';
   import ExtraAddressIcons from '$lib/components/extra/ExtraAddressIcons.svelte';
   import ExtraFaviconsMenuItem from '$lib/components/extra/ExtraFaviconsMenuItem.svelte';
 

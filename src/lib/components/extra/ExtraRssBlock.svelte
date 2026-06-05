@@ -9,11 +9,11 @@
   import { spasm } from '$lib/spasm';
   import { useUtils } from '$lib/utils/useUtils';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
-  import IconsRss from '$lib/components/icons/IconsRss.svelte';
+  import IconsRss from '@lucide/svelte/icons/rss';
   import IconsTriangle from '$lib/components/icons/IconsTriangle.svelte';
-  import IconsExternalWebsite from '$lib/components/icons/IconsExternalWebsite.svelte';
-  import IconsCopyToClipboard from '$lib/components/icons/IconsCopyToClipboard.svelte';
-  import IconsCheck from '$lib/components/icons/IconsCheck.svelte';
+  import IconsExternalWebsite from '@lucide/svelte/icons/external-link';
+  import IconsCopyToClipboard from '@lucide/svelte/icons/copy';
+  import IconsCheck from '@lucide/svelte/icons/check';
 
   const apiUrl = useAppConfigStore()?.getApiUrl;
   const { hasValue, copyToClipboard, isArrayWithValues } = useUtils();

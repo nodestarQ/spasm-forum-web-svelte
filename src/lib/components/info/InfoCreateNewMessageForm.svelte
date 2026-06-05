@@ -15,7 +15,7 @@
   import { useNostr } from '$lib/utils/useNostr';
   import { useUtils } from '$lib/utils/useUtils';
   import IconsTriangle from '$lib/components/icons/IconsTriangle.svelte';
-  import IconsExternalWebsite from '$lib/components/icons/IconsExternalWebsite.svelte';
+  import IconsExternalWebsite from '@lucide/svelte/icons/external-link';
 
   const appConfig = useAppConfigStore()?.getAppConfig;
   const notificationStore = useNotificationStore();

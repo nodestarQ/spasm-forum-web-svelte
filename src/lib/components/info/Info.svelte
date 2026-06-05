@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { useFeed } from '$lib/utils/useFeed';
-  import IconsArrowLeft from '$lib/components/icons/IconsArrowLeft.svelte';
+  import IconsArrowLeft from '@lucide/svelte/icons/arrow-left';
 
   const { showFeed } = useFeed();
 

@@ -11,13 +11,13 @@
   import { useTime } from '$lib/utils/useTime';
   import { useFeed } from '$lib/utils/useFeed';
   import ExtraBlockies from '$lib/components/extra/ExtraBlockies.svelte';
-  import IconsBullish from '$lib/components/icons/IconsBullish.svelte';
-  import IconsBearish from '$lib/components/icons/IconsBearish.svelte';
-  import IconsImportant from '$lib/components/icons/IconsImportant.svelte';
-  import IconsScam from '$lib/components/icons/IconsScam.svelte';
-  import IconsUpvote from '$lib/components/icons/IconsUpvote.svelte';
-  import IconsDownvote from '$lib/components/icons/IconsDownvote.svelte';
-  import IconsComments from '$lib/components/icons/IconsComments.svelte';
+  import IconsBullish from '@lucide/svelte/icons/trending-up';
+  import IconsBearish from '@lucide/svelte/icons/trending-down';
+  import IconsImportant from '@lucide/svelte/icons/circle-alert';
+  import IconsScam from '@lucide/svelte/icons/triangle-alert';
+  import IconsUpvote from '@lucide/svelte/icons/thumbs-up';
+  import IconsDownvote from '@lucide/svelte/icons/thumbs-down';
+  import IconsComments from '@lucide/svelte/icons/message-square';
 
   let {
     post,

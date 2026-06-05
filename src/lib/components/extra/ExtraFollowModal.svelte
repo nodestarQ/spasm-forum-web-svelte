@@ -1,6 +1,7 @@
 <script lang="ts">
   import { useWeb3 } from '$lib/utils/useWeb3';
   import ExtraAddressIcons from './ExtraAddressIcons.svelte';
+  import IconsClose from '@lucide/svelte/icons/x';
   import { fade, scale } from 'svelte/transition';
 
   const { followValue, hideFollowModal } = useWeb3();
@@ -35,7 +36,7 @@
       class="absolute top-3 right-4 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
       onclick={() => hideFollowModal()}
     >
-      X
+      <IconsClose class="w-5 h-5" />
     </span>
 
     <div class="flex flex-col gap-3 mt-4">

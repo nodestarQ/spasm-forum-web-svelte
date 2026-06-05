@@ -113,19 +113,19 @@
 }
 
 @utility custom-icons {
-  @apply w-5 inline-block;
+  @apply w-5 h-auto inline-block;
 }
 
 @utility custom-icons-large {
-  @apply w-6 inline-block;
+  @apply w-6 h-auto inline-block;
 }
 
 @utility custom-icons-xl {
-  @apply w-7 inline-block;
+  @apply w-7 h-auto inline-block;
 }
 
 @utility custom-icons-xxl {
-  @apply w-8 inline-block;
+  @apply w-8 h-auto inline-block;
 }
 
 @utility custom-admin-input-socials {

@@ -18,7 +18,7 @@
   import CustomContacts from '$lib/components/custom/CustomContacts.svelte';
   import ExtraRssBlock from '$lib/components/extra/ExtraRssBlock.svelte';
   import InfoEventCommentsCard from '$lib/components/info/InfoEventCommentsCard.svelte';
-  import IconsRocket from '$lib/components/icons/IconsRocket.svelte';
+  import IconsRocket from '@lucide/svelte/icons/rocket';
 
   const profilesStore = useProfilesStore();
   const appConfig = useAppConfigStore()?.getAppConfig;

@@ -2,10 +2,10 @@
   import { config } from '$lib/config';
   import { useUtils } from '$lib/utils/useUtils';
   import { useWeb3 } from '$lib/utils/useWeb3';
-  import IconsCopyToClipboard from '$lib/components/icons/IconsCopyToClipboard.svelte';
-  import IconsCheck from '$lib/components/icons/IconsCheck.svelte';
-  import IconsQrCode from '$lib/components/icons/IconsQrCode.svelte';
-  import IconsExternalWebsite from '$lib/components/icons/IconsExternalWebsite.svelte';
+  import IconsCopyToClipboard from '@lucide/svelte/icons/copy';
+  import IconsCheck from '@lucide/svelte/icons/check';
+  import IconsQrCode from '@lucide/svelte/icons/qr-code';
+  import IconsExternalWebsite from '@lucide/svelte/icons/external-link';
 
   const { copyToClipboard } = useUtils();
   const { showQrCodeModal, setQrCodeValue, showFollowModal, setFollowValue } = useWeb3();

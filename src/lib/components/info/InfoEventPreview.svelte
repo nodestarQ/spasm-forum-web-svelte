@@ -14,7 +14,7 @@
   import { useHtmlTags } from '$lib/utils/useHtmlTags';
   import InfoEventAuthorAddress from './InfoEventAuthorAddress.svelte';
   import ExtraRssBlock from '$lib/components/extra/ExtraRssBlock.svelte';
-  import IconsExternalWebsite from '$lib/components/icons/IconsExternalWebsite.svelte';
+  import IconsExternalWebsite from '@lucide/svelte/icons/external-link';
 
   const appConfig = useAppConfigStore()?.getAppConfig;
   const profilesStore = useProfilesStore();

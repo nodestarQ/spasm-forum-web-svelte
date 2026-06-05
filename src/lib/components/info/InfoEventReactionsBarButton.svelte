@@ -3,13 +3,13 @@
   import { useEventsStore } from '$lib/stores/useEventsStore.svelte';
   import { useNotificationStore } from '$lib/stores/useNotificationStore';
   import { useWeb3 } from '$lib/utils/useWeb3';
-  import IconsUpvote from '$lib/components/icons/IconsUpvote.svelte';
-  import IconsDownvote from '$lib/components/icons/IconsDownvote.svelte';
-  import IconsBullish from '$lib/components/icons/IconsBullish.svelte';
-  import IconsBearish from '$lib/components/icons/IconsBearish.svelte';
-  import IconsImportant from '$lib/components/icons/IconsImportant.svelte';
-  import IconsScam from '$lib/components/icons/IconsScam.svelte';
-  import IconsComments from '$lib/components/icons/IconsComments.svelte';
+  import IconsUpvote from '@lucide/svelte/icons/thumbs-up';
+  import IconsDownvote from '@lucide/svelte/icons/thumbs-down';
+  import IconsBullish from '@lucide/svelte/icons/trending-up';
+  import IconsBearish from '@lucide/svelte/icons/trending-down';
+  import IconsImportant from '@lucide/svelte/icons/circle-alert';
+  import IconsScam from '@lucide/svelte/icons/triangle-alert';
+  import IconsComments from '@lucide/svelte/icons/message-square';
 
   const eventsStore = useEventsStore();
   const notificationStore = useNotificationStore();

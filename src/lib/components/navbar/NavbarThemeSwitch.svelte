@@ -1,7 +1,7 @@
 <script lang="ts">
   import { toggleMode } from 'mode-watcher';
-  import IconsSun from '$lib/components/icons/IconsSun.svelte';
-  import IconsMoon from '$lib/components/icons/IconsMoon.svelte';
+  import IconsSun from '@lucide/svelte/icons/sun';
+  import IconsMoon from '@lucide/svelte/icons/moon';
 </script>
 
 <span class="cursor-pointer" onclick={toggleMode}>

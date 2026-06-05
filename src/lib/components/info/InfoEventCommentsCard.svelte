@@ -20,7 +20,7 @@
   import ExtraTipsBlock from '$lib/components/extra/ExtraTipsBlock.svelte';
   import InfoEventCommentsCardReactionsBar from './InfoEventCommentsCardReactionsBar.svelte';
   import InfoCreateNewMessageForm from './InfoCreateNewMessageForm.svelte';
-  import IconsComments from '$lib/components/icons/IconsComments.svelte';
+  import IconsComments from '@lucide/svelte/icons/message-square';
   // Recursive self-import (Svelte 5 replacement for <svelte:self>).
   import InfoEventCommentsCard from './InfoEventCommentsCard.svelte';
 

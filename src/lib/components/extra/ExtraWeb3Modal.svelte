@@ -5,6 +5,7 @@
   import { useWalletDiscovery } from '$lib/utils/useWalletDiscovery';
   import IconsUser from '$lib/components/icons/IconsUser.svelte';
   import { onMount } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
 
   const appConfig = useAppConfigStore()?.getAppConfig;
   const notificationStore = useNotificationStore();
@@ -89,107 +90,83 @@
 </script>
 
 <div
-  class="fixed top-0 bottom-0 left-0 right-0 grid justify-center bg-black/60 scrollbar-none"
+  class="fixed inset-0 flex items-center justify-center p-4 bg-black/60"
   onclick={() => hideWeb3Modal()}
+  transition:fade={{ duration: 120 }}
 >
   <div
-    class="mt-2 lg:mt-5 max-h-132 overflow-scroll bg-bgSecondary-light dark:bg-bgSecondary-dark block w-80 text-center relative scrollbar-none"
+    class="relative w-80 max-w-full max-h-[85vh] overflow-y-auto scrollbar-none p-6 text-center bg-bgSecondary-light dark:bg-bgSecondary-dark border border-borderColor-light dark:border-borderColor-dark rounded-xl shadow-xl"
     onclick={(e) => e.stopPropagation()}
+    transition:scale={{ duration: 150, start: 0.96, opacity: 0 }}
   >
     <span
-      class="pr-3 pt-2 pl-1 pb-1 absolute right-0 top-0 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+      class="absolute top-3 right-4 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
       onclick={() => hideWeb3Modal()}
     >
       X
     </span>
 
-    {#if ifAllowGuestLogin && enableNewEthereumActionsAll}
-      <div class="mt-5 mx-10 text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">
-        Temporary:
-      </div>
-      <div class="font-bold">
-        <div
-          class="block mb-3 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-          onclick={() => guestClicked()}
-        >
-          <IconsUser class="m-1 w-6 inline-block" />
+    <div class="flex flex-col gap-3 mt-4">
+      <!-- Guest (temporary identity) -->
+      {#if ifAllowGuestLogin && enableNewEthereumActionsAll}
+        <div class="text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">
+          Temporary
+        </div>
+        <button type="button" class="modal-option" onclick={() => guestClicked()}>
+          <IconsUser class="w-6 h-6 inline-block" />
           Log in as guest
-        </div>
-      </div>
-    {:else}
-      <div class="h-16"><br /></div>
-    {/if}
-
-    <!-- Ethereum -->
-    {#if enableNewEthereumActionsAll}
-      <div class="mx-10 text-sm font-normal border-t border-colorNotImportant-light dark:border-colorNotImportant-dark text-colorNotImportant-light dark:text-colorNotImportant-dark">
-        Ethereum browser extensions:
-      </div>
-
-      {#each wallets.value as wallet (wallet.info.rdns)}
-        <div
-          class="block mt-2 mb-1 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-          onclick={() => walletClicked(wallet.provider)}
-        >
-          <img class="inline-block w-8" src={wallet.info.icon} alt={wallet.info.name} />
-          {wallet.info.name}
-        </div>
-      {/each}
-
-      {#if wallets.value.length === 0}
-        <!-- Fallback for wallets that don't support EIP-6963 yet:
-             connect through the single window.ethereum slot. -->
-        <div
-          class="block mt-2 mb-4 h-8 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-          onclick={() => browserExtensionClicked()}
-        >
-          Other Ethereum extension
-        </div>
+        </button>
+        <div class="modal-divider"></div>
       {/if}
-    {/if}
 
-    <!-- Nostr -->
-    {#if enableNewNostrActionsAll}
-      <div class="mx-10 text-sm font-normal border-t border-colorNotImportant-light dark:border-colorNotImportant-dark text-colorNotImportant-light dark:text-colorNotImportant-dark">
-        Nostr browser extensions:
-      </div>
+      <!-- Ethereum -->
+      {#if enableNewEthereumActionsAll}
+        <div class="text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">
+          Ethereum browser extensions
+        </div>
 
-      <div
-        class="block mt-3 mb-3 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-        onclick={() => nostrExtensionClicked()}
-      >
-        <img class="inline-block w-7" src="/images/logos/nos2x-logo.png" alt="nos2x logo" />
-        nos2x
-      </div>
+        {#each wallets.value as wallet (wallet.info.rdns)}
+          <button type="button" class="modal-option" onclick={() => walletClicked(wallet.provider)}>
+            <img class="w-6 h-6 object-contain" src={wallet.info.icon} alt={wallet.info.name} />
+            {wallet.info.name}
+          </button>
+        {/each}
 
-      <div
-        class="block mt-2 mb-2 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-        onclick={() => nostrExtensionClicked()}
-      >
-        <img class="inline-block w-7" src="/images/logos/flamingo-logo.png" alt="Flamingo logo" />
-        Flamingo
-      </div>
+        {#if wallets.value.length === 0}
+          <!-- Fallback for wallets that don't support EIP-6963 yet. -->
+          <button type="button" class="modal-option" onclick={() => browserExtensionClicked()}>
+            Other Ethereum extension
+          </button>
+        {/if}
+        <div class="modal-divider"></div>
+      {/if}
 
-      <div
-        class="block mb-4 h-8 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer"
-        onclick={() => nostrExtensionClicked()}
-      >
-        Another Nostr extension
-      </div>
-    {/if}
+      <!-- Nostr -->
+      {#if enableNewNostrActionsAll}
+        <div class="text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">
+          Nostr browser extensions
+        </div>
 
-    <div class="mx-10 text-sm border-t border-colorNotImportant-light dark:border-colorNotImportant-dark text-colorNotImportant-light dark:text-colorNotImportant-dark"></div>
-    <button
-      class="w-48 h-8 my-1 text-colorNotImportant-light dark:text-colorNotImportant-dark"
-      onclick={() => logOut()}
-    >
-      Log out
-    </button>
-    <button
-      class="w-48 h-10 my-3 border rounded-lg border-colorBase-light dark:border-colorBase-dark hover:text-colorPrimary-light dark:hover:colorPrimary-dark hover:bg-bgHover-light dark:hover:bg-bgHover-dark hover:border-colorPrimary-light dark:hover:border-colorPrimary-dark"
-      onclick={() => hideWeb3Modal()}
-    >
-      Close
-    </button>
+        <button type="button" class="modal-option" onclick={() => nostrExtensionClicked()}>
+          <img class="w-6 h-6 object-contain" src="/images/logos/nos2x-logo.png" alt="nos2x logo" />
+          nos2x
+        </button>
+
+        <button type="button" class="modal-option" onclick={() => nostrExtensionClicked()}>
+          <img class="w-6 h-6 object-contain" src="/images/logos/flamingo-logo.png" alt="Flamingo logo" />
+          Flamingo
+        </button>
+
+        <button type="button" class="modal-option" onclick={() => nostrExtensionClicked()}>
+          Another Nostr extension
+        </button>
+        <div class="modal-divider"></div>
+      {/if}
+
+      <!-- Log out: account action, kept last -->
+      <button type="button" class="modal-option-muted" onclick={() => logOut()}>
+        Log out
+      </button>
+    </div>
   </div>
 </div>

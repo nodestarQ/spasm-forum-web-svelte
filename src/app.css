@@ -149,6 +149,19 @@
   @apply bg-bgBase-dark dark:bg-bgBase-light;
 }
 
+/* Shared modal styling so the connect/follow/qr modals stay coherent. */
+@utility modal-option {
+  @apply w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg no-underline border border-borderColor-light dark:border-borderColor-dark text-colorBase-light dark:text-colorBase-dark hover:bg-bgHover-light dark:hover:bg-bgHover-dark hover:border-colorPrimary-light dark:hover:border-colorPrimary-dark transition-colors cursor-pointer;
+}
+
+@utility modal-option-muted {
+  @apply w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg no-underline border border-borderColor-light dark:border-borderColor-dark text-colorNotImportant-light dark:text-colorNotImportant-dark hover:bg-bgHover-light dark:hover:bg-bgHover-dark hover:border-colorPrimary-light dark:hover:border-colorPrimary-dark transition-colors cursor-pointer;
+}
+
+@utility modal-divider {
+  @apply border-t border-colorNotImportant-light dark:border-colorNotImportant-dark;
+}
+
 @layer utilities {
   /* disable scrollbar in Chrome, Safari, Brave */
   ::-webkit-scrollbar {

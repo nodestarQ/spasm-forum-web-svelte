@@ -144,14 +144,17 @@
   @apply my-2 py-4 border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark;
 }
 
-/* Admin accordion cards: each main section is a card that lifts and
-   grows a little when opened. */
+/* Admin accordion cards: each main section is a card that lifts (shadow)
+   and recolors its header when opened. No scale/transform on the open
+   card: these sit inside an overflow-auto wrapper, and Blink squares the
+   rounded corners of a transformed element clipped by a scrolling
+   ancestor. */
 @utility admin-card {
   @apply mb-2 rounded-sm border border-borderColor-light dark:border-borderColor-dark bg-bgSecondary-light dark:bg-bgSecondary-dark overflow-hidden transition duration-200;
 }
 
 @utility admin-card-open {
-  @apply shadow-lg scale-[1.01];
+  @apply shadow-lg;
 }
 
 @utility admin-card-header {

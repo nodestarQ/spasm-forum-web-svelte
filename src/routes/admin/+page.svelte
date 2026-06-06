@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { beforeNavigate } from '$app/navigation';
   import { slide } from 'svelte/transition';
   import type { AppConfig } from '$lib/types/interfaces';
   import { useAppConfigStore } from '$lib/stores/useAppConfigStore.svelte';
@@ -9,8 +10,11 @@
   import { useUtils } from '$lib/utils/useUtils';
   import IconsTriangle from '$lib/components/icons/IconsTriangle.svelte';
   import IconsReset from '@lucide/svelte/icons/refresh-cw';
+  import IconsChevronDown from '@lucide/svelte/icons/chevron-down';
   import ExtraAddressIcons from '$lib/components/extra/ExtraAddressIcons.svelte';
-  import ExtraFaviconsMenuItem from '$lib/components/extra/ExtraFaviconsMenuItem.svelte';
+  import ExtraToggle from '$lib/components/extra/ExtraToggle.svelte';
+  import ExtraFaviconModal from '$lib/components/extra/ExtraFaviconModal.svelte';
+  import ExtraColorInput from '$lib/components/extra/ExtraColorInput.svelte';
 
   const appConfigStore = useAppConfigStore();
   const notificationStore = useNotificationStore();
@@ -115,6 +119,24 @@
   };
   const COLOR_FIELDS = Object.keys(COLOR_CSS);
 
+  // Light/dark pairs for the advanced colors grid (one row per color).
+  const COLOR_GROUPS: Array<{ label: string; light: string; dark: string }> = [
+    { label: 'Primary', light: 'colorPrimaryLight', dark: 'colorPrimaryDark' },
+    { label: 'Base', light: 'colorBaseLight', dark: 'colorBaseDark' },
+    { label: 'Secondary', light: 'colorSecondaryLight', dark: 'colorSecondaryDark' },
+    { label: 'Hover', light: 'colorHoverLight', dark: 'colorHoverDark' },
+    { label: 'Not important', light: 'colorNotImportantLight', dark: 'colorNotImportantDark' },
+    { label: 'Green', light: 'colorGreenLight', dark: 'colorGreenDark' },
+    { label: 'Red', light: 'colorRedLight', dark: 'colorRedDark' },
+    { label: 'Orange', light: 'colorOrangeLight', dark: 'colorOrangeDark' },
+    { label: 'Blue', light: 'colorBlueLight', dark: 'colorBlueDark' },
+    { label: 'Background base', light: 'bgBaseLight', dark: 'bgBaseDark' },
+    { label: 'Background secondary', light: 'bgSecondaryLight', dark: 'bgSecondaryDark' },
+    { label: 'Background hover', light: 'bgHoverLight', dark: 'bgHoverDark' },
+    { label: 'Background dark', light: 'bgDarkLight', dark: 'bgDarkDark' },
+    { label: 'Border', light: 'borderColorLight', dark: 'borderColorDark' }
+  ];
+
   // Build the editable form from a config, coercing each field to
   // the type its input control needs.
   const makeForm = (c?: AppConfig | null): Record<string, any> => {
@@ -139,6 +161,23 @@
   let form: Record<string, any> = $state(makeForm(appConfigStore.getAppConfig));
   let savedTheme: Record<string, any> = $state(pickColors(form));
 
+  // Dirty-state guard: warn before leaving with unsaved edits to any
+  // config field. The form is one flat record, so a JSON snapshot taken
+  // at load / after save is a reliable baseline to diff against.
+  let savedFormJson = $state(JSON.stringify(form));
+  const isDirty = $derived(JSON.stringify(form) !== savedFormJson);
+
+  beforeNavigate((nav) => {
+    if (!isDirty) return;
+    if (nav.type === 'leave') {
+      // Closing/refreshing the tab or following an external link: defer
+      // to the browser's native "Leave site?" dialog.
+      nav.cancel();
+    } else if (!confirm('You have unsaved config changes. Leave without saving?')) {
+      nav.cancel();
+    }
+  });
+
   let isResponseError = $state(false);
   let responseMessage = $state('');
 
@@ -157,14 +196,35 @@
   let showFederation = $state(false);
 
   // ----- Favicons -----
-  const favicons = [
-    'custom-link', 'spasm', 'monero', 'zcash', 'ethereum', 'bitcoin', 'solana',
-    'campfire', 'chat', 'cube', 'research', 'rocket', 'roger', 'default'
-  ];
-  let faviconDropDownShown = $state(false);
-  const toggleFaviconDropDown = () => {
-    faviconDropDownShown = !faviconDropDownShown;
+  // value -> icon path, shared by the trigger button and selection
+  // logic ('custom-link' uses form.faviconLink; 'default' the app icon).
+  const FAVICON_SRC: Record<string, string> = {
+    spasm: '/favicons/spasm.ico',
+    monero: '/favicons/monero.ico',
+    zcash: '/favicons/zcash.ico',
+    ethereum: '/favicons/ethereum.ico',
+    bitcoin: '/favicons/bitcoin.ico',
+    solana: '/favicons/solana.ico',
+    campfire: '/favicons/campfire.ico',
+    chat: '/favicons/chat.ico',
+    cube: '/favicons/cube.ico',
+    research: '/favicons/research.ico',
+    rocket: '/favicons/rocket.ico',
+    roger: '/favicons/roger.ico',
+    default: '/favicon.ico'
   };
+  let faviconModalOpen = $state(false);
+
+  const resolveFaviconHref = (name?: string): string => {
+    if (name === 'custom-link') return form.faviconLink || '/favicon.ico';
+    return (name && FAVICON_SRC[name]) || '/favicon.ico';
+  };
+
+  const currentFaviconSrc = $derived.by(() => {
+    const t = form.faviconTheme;
+    if (t === 'custom-link') return form.faviconLink || null;
+    return (t && FAVICON_SRC[t]) || '/favicon.ico';
+  });
 
   const ensureHtmlLink = (selector: string, createAttrs: Record<string, string>) => {
     let link = document.head.querySelector(selector) as HTMLLinkElement | null;
@@ -193,32 +253,26 @@
 
   const selectFavicon = (newFavicon: string): void => {
     form.faviconTheme = newFavicon.toLowerCase();
-    toggleFaviconDropDown();
-    const faviconMap: Record<string, string> = {
-      spasm: '/favicons/spasm.ico',
-      monero: '/favicons/monero.ico',
-      zcash: '/favicons/zcash.ico',
-      ethereum: '/favicons/ethereum.ico',
-      bitcoin: '/favicons/bitcoin.ico',
-      solana: '/favicons/solana.ico',
-      'custom-link': form.faviconLink,
-      campfire: '/favicons/campfire.ico',
-      chat: '/favicons/chat.ico',
-      cube: '/favicons/cube.ico',
-      research: '/favicons/research.ico',
-      rocket: '/favicons/rocket.ico',
-      roger: '/favicons/roger.ico',
-      default: '/favicon.ico'
-    };
-    updateFaviconInBrowserTab(faviconMap[newFavicon] ?? faviconMap.default);
+    faviconModalOpen = false;
+    updateFaviconInBrowserTab(resolveFaviconHref(newFavicon));
   };
 
   // ----- Themes -----
   const themes = ['Spasm', 'DarkVegas', 'Neon', 'Greeny', 'Custom'];
   let theme = $state('Custom');
-  let themeDropDownShown = $state(false);
-  const toggleThemeDropDown = () => {
-    themeDropDownShown = !themeDropDownShown;
+
+  // Representative swatch (solid color or gradient) per theme button.
+  const themeSwatch = (t: string): string => {
+    switch (t) {
+      case 'Spasm': return '#f420af';
+      case 'DarkVegas': return '#ff0000';
+      case 'Neon': return 'linear-gradient(135deg, #f420af, #1a5fb4)';
+      case 'Greeny': return 'linear-gradient(135deg, #e5c46b, #4fb848)';
+      case 'Custom':
+        return form.colorPrimaryLight || form.colorPrimaryDark ||
+          'conic-gradient(#f420af, #f4af0c, #4fb848, #3a3dff, #f420af)';
+      default: return '#888888';
+    }
   };
 
   const setColors = (values: Record<string, string | null>) => {
@@ -273,7 +327,6 @@
 
   const selectTheme = (newTheme: string): void => {
     theme = newTheme;
-    toggleThemeDropDown();
     if (newTheme === 'Spasm') setThemeSpasm();
     if (newTheme === 'DarkVegas') setThemeDarkVegas();
     if (newTheme === 'Neon') setThemeNeon();
@@ -310,6 +363,7 @@
     const c = appConfigStore.getAppConfig;
     form = makeForm(c);
     savedTheme = pickColors(form);
+    savedFormJson = JSON.stringify(form);
   });
 
   const saveAppConfig = async () => {
@@ -356,6 +410,7 @@
           return;
         } else if (res.toLowerCase().startsWith('success')) {
           await appConfigStore.fetchAndUpdateAppConfig();
+          savedFormJson = JSON.stringify(form);
           notificationStore.showNotification('Success: config is saved', 'success', 8000);
           return;
         }
@@ -402,6 +457,9 @@
           >
             Save app config
           </button>
+          {#if isDirty}
+            <span class="ml-3 text-colorOrange-light dark:text-colorOrange-dark">Unsaved changes</span>
+          {/if}
         </div>
       {:else if connectedAddress.value && typeof connectedAddress.value === 'string' && !isInList(connectedAddress.value, admins)}
         <div>
@@ -457,24 +515,19 @@
       <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <!-- Favicons -->
         <div class="mt-0 mb-4">
-          <div class="mt-2">
-            <span onclick={() => toggleFaviconDropDown()} class="cursor-pointer">
-              Favicon:
-              <span class="font-bold text-colorPrimary-light dark:text-colorPrimary-dark">{form.faviconTheme}</span>
-              <IconsTriangle rotateIf={faviconDropDownShown} />
-            </span>
+          <div class="mt-2 flex items-center gap-2">
+            <span>Favicon:</span>
+            <button type="button" onclick={() => (faviconModalOpen = true)} class="admin-picker-trigger">
+              {#if currentFaviconSrc}
+                <img src={currentFaviconSrc} alt="" class="h-5 w-5 object-contain" />
+              {/if}
+              <span class="font-bold text-colorPrimary-light dark:text-colorPrimary-dark">{form.faviconTheme || 'default'}</span>
+              <IconsChevronDown class="h-4 w-4 text-colorNotImportant-light dark:text-colorNotImportant-dark" />
+            </button>
           </div>
 
-          {#if faviconDropDownShown}
-            <div transition:slide={{ duration: 250 }} class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28">
-              {#each favicons as favicon}
-                <ExtraFaviconsMenuItem {favicon} onclick={() => selectFavicon(favicon)} />
-              {/each}
-            </div>
-          {/if}
-
           {#if form.faviconTheme === 'custom-link'}
-            <div class="ml-5">
+            <div class="ml-5 mt-2">
               Favicon custom-link:
               <input bind:value={form.faviconLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" />
               <div class="text-colorNotImportant-light text-colorNotImportant-dark">
@@ -485,28 +538,23 @@
         </div>
 
         <div>
-          <div class="mt-3 mb-0">
-            <span class="mr-2">Colors:</span>
-            <span onclick={() => toggleThemeDropDown()} class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer">
-              <span class="font-bold text-colorPrimary-light dark:text-colorPrimary-dark">{theme}</span>
-              <IconsTriangle rotateIf={themeDropDownShown} />
-            </span>
+          <div class="mt-3 mb-2">Colors:</div>
+          <div class="flex flex-wrap gap-2">
+            {#each themes as themeName}
+              <button
+                type="button"
+                onclick={() => selectTheme(themeName)}
+                class="admin-swatch {theme === themeName
+                  ? 'border-colorPrimary-light dark:border-colorPrimary-dark text-colorPrimary-light dark:text-colorPrimary-dark bg-bgHover-light dark:bg-bgHover-dark'
+                  : 'border-borderColor-light dark:border-borderColor-dark text-colorNotImportant-light dark:text-colorNotImportant-dark hover:border-colorPrimary-light dark:hover:border-colorPrimary-dark hover:bg-bgHover-light dark:hover:bg-bgHover-dark'}"
+              >
+                <span class="h-3.5 w-3.5 rounded-full border border-black/10 dark:border-white/10" style="background: {themeSwatch(themeName)}"></span>
+                {themeName}
+              </button>
+            {/each}
           </div>
 
-          {#if themeDropDownShown}
-            <div transition:slide={{ duration: 250 }} class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28">
-              {#each themes as themeName}
-                <div
-                  class="py-1 font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
-                  onclick={() => selectTheme(themeName)}
-                >
-                  {themeName}
-                </div>
-              {/each}
-            </div>
-          {/if}
-
-          <div class="mt-2 mb-2">
+          <div class="mt-3 mb-2">
             <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" onclick={() => resetColorsToSavedTheme()}>
               <IconsReset class="custom-icons" />
               Reset theme
@@ -514,19 +562,13 @@
           </div>
         </div>
 
-        <div>
-          <span class="hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" onclick={() => (showAdvancedColors = !showAdvancedColors)}>
-            Advanced colors
-            <IconsTriangle rotateIf={showAdvancedColors} />
-          </span>
+        <div class="mt-2">
+          <ExtraToggle bind:checked={showAdvancedColors} label="Advanced colors" />
         </div>
 
         {#if showAdvancedColors}
           <div transition:slide={{ duration: 250 }} class="pl-4">
             <div class="mt-2 ml-5">
-              <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-                For each color you can specify values for dark and light themes
-              </div>
               <div class="mt-2 mb-2">
                 <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" onclick={() => setColorsToNull()}>
                   <IconsReset class="custom-icons" />
@@ -534,34 +576,16 @@
                   <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(don't forget to save config)</span>
                 </span>
               </div>
-              <div>Primary color (light): <input bind:value={form.colorPrimaryLight} type="color" class="custom-color-picker" /> {form.colorPrimaryLight}</div>
-              <div>Primary color (dark): <input bind:value={form.colorPrimaryDark} type="color" class="custom-color-picker" /> {form.colorPrimaryDark}</div>
-              <div>Base color (light): <input bind:value={form.colorBaseLight} type="color" class="custom-color-picker" /> {form.colorBaseLight}</div>
-              <div>Base color (dark): <input bind:value={form.colorBaseDark} type="color" class="custom-color-picker" /> {form.colorBaseDark}</div>
-              <div>Secondary color (light): <input bind:value={form.colorSecondaryLight} type="color" class="custom-color-picker" /> {form.colorSecondaryLight}</div>
-              <div>Secondary color (dark): <input bind:value={form.colorSecondaryDark} type="color" class="custom-color-picker" /> {form.colorSecondaryDark}</div>
-              <div>Hover color (light): <input bind:value={form.colorHoverLight} type="color" class="custom-color-picker" /> {form.colorHoverLight}</div>
-              <div>Hover color (dark): <input bind:value={form.colorHoverDark} type="color" class="custom-color-picker" /> {form.colorHoverDark}</div>
-              <div>Not important color (light): <input bind:value={form.colorNotImportantLight} type="color" class="custom-color-picker" /> {form.colorNotImportantLight}</div>
-              <div>Not important color (dark): <input bind:value={form.colorNotImportantDark} type="color" class="custom-color-picker" /> {form.colorNotImportantDark}</div>
-              <div>Green color (light): <input bind:value={form.colorGreenLight} type="color" class="custom-color-picker" /> {form.colorGreenLight}</div>
-              <div>Green color (dark): <input bind:value={form.colorGreenDark} type="color" class="custom-color-picker" />{form.colorGreenDark}</div>
-              <div>Red color (light): <input bind:value={form.colorRedLight} type="color" class="custom-color-picker" /> {form.colorRedLight}</div>
-              <div>Red color (dark): <input bind:value={form.colorRedDark} type="color" class="custom-color-picker" /> {form.colorRedDark}</div>
-              <div>Orange color (light): <input bind:value={form.colorOrangeLight} type="color" class="custom-color-picker" /> {form.colorOrangeLight}</div>
-              <div>Orange color (dark): <input bind:value={form.colorOrangeDark} type="color" class="custom-color-picker" /> {form.colorOrangeDark}</div>
-              <div>Blue color (light): <input bind:value={form.colorBlueLight} type="color" class="custom-color-picker" /> {form.colorBlueLight}</div>
-              <div>Blue color (dark): <input bind:value={form.colorBlueDark} type="color" class="custom-color-picker" /> {form.colorBlueDark}</div>
-              <div>Background Base (light): <input bind:value={form.bgBaseLight} type="color" class="custom-color-picker" /> {form.bgBaseLight}</div>
-              <div>Background Base (dark): <input bind:value={form.bgBaseDark} type="color" class="custom-color-picker" /> {form.bgBaseDark}</div>
-              <div>Background Secondary (light): <input bind:value={form.bgSecondaryLight} type="color" class="custom-color-picker" /> {form.bgSecondaryLight}</div>
-              <div>Background Secondary (dark): <input bind:value={form.bgSecondaryDark} type="color" class="custom-color-picker" /> {form.bgSecondaryDark}</div>
-              <div>Background Hover (light): <input bind:value={form.bgHoverLight} type="color" class="custom-color-picker" /> {form.bgHoverLight}</div>
-              <div>Background Hover (dark): <input bind:value={form.bgHoverDark} type="color" class="custom-color-picker" /> {form.bgHoverDark}</div>
-              <div>Background Dark (light): <input bind:value={form.bgDarkLight} type="color" class="custom-color-picker" /> {form.bgDarkLight}</div>
-              <div>Background Dark (dark): <input bind:value={form.bgDarkDark} type="color" class="custom-color-picker" /> {form.bgDarkDark}</div>
-              <div>Border color (light): <input bind:value={form.borderColorLight} type="color" class="custom-color-picker" /> {form.borderColorLight}</div>
-              <div>Border color (dark): <input bind:value={form.borderColorDark} type="color" class="custom-color-picker" /> {form.borderColorDark}</div>
+              <div class="mt-3 grid grid-cols-[minmax(7rem,1fr)_auto_auto] items-center gap-x-4 gap-y-2 max-w-[540px]">
+                <span></span>
+                <span class="text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">Light</span>
+                <span class="text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">Dark</span>
+                {#each COLOR_GROUPS as g}
+                  <span>{g.label}</span>
+                  <ExtraColorInput bind:value={form[g.light]} ariaLabel={`${g.label} light`} />
+                  <ExtraColorInput bind:value={form[g.dark]} ariaLabel={`${g.label} dark`} />
+                {/each}
+              </div>
 
               <div class="mt-2 mb-2">
                 <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" onclick={() => resetColorsToSavedTheme()}>
@@ -594,8 +618,7 @@
       <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div class="pl-0 mt-2">
           <div class="pl-0 mt-2">
-            <input bind:checked={form.enableDefaultHeaderImage} type="checkbox" />
-            Enable header image
+            <ExtraToggle bind:checked={form.enableDefaultHeaderImage} label="Enable header image" />
           </div>
           {#if form.enableDefaultHeaderImage}
             <div class="ml-5">
@@ -610,9 +633,7 @@
           {/if}
         </div>
         <div class="pl-0 mt-4">
-          <input bind:checked={form.enableDefaultIntro} type="checkbox" />
-          Enable intro section: title, extra, about
-          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(also used for meta)</span>
+          <ExtraToggle bind:checked={form.enableDefaultIntro} label="Enable intro section: title, extra, about" hint="(also used for meta)" />
           {#if form.enableDefaultIntro}
             <div class="ml-5">
               <div>
@@ -631,32 +652,29 @@
           {/if}
         </div>
         <div class="pl-0 mt-4">
-          <input bind:checked={form.enableDefaultContacts} type="checkbox" />
-          Enable contacts
+          <ExtraToggle bind:checked={form.enableDefaultContacts} label="Enable contacts" />
           {#if form.enableDefaultContacts}
             <div class="ml-5 pl-0">
-              <input bind:checked={form.ifShowContactsInIntro} type="checkbox" />
-              And show contacts in intro section
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-                (if disabled, contacts will be shown only at
-                <a class="cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" href="/contacts">/contacts</a>
-                page)
-              </span>
+              <ExtraToggle bind:checked={form.ifShowContactsInIntro} label="And show contacts in intro section">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  (if disabled, contacts will be shown only at
+                  <a class="cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" href="/contacts">/contacts</a>
+                  page)
+                </span>
+              </ExtraToggle>
             </div>
           {/if}
         </div>
         <div class="mt-6">
           <div class="pl-0">
-            <input bind:checked={form.enableDefaultButtonPrimary} type="checkbox" />
-            Enable button primary
+            <ExtraToggle bind:checked={form.enableDefaultButtonPrimary} label="Enable button primary" />
           </div>
           {#if form.enableDefaultButtonPrimary}
             <div class="ml-5">Primary button link: <input bind:value={form.defaultButtonPrimaryLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
             <div class="ml-5">Primary button text: <input bind:value={form.defaultButtonPrimaryText} type="text" placeholder="enter button text (e.g., Get started)" class="custom-admin-input-socials" /></div>
           {/if}
           <div class="mt-2 pl-0">
-            <input bind:checked={form.enableDefaultButtonSecondary} type="checkbox" />
-            Enable button secondary
+            <ExtraToggle bind:checked={form.enableDefaultButtonSecondary} label="Enable button secondary" />
           </div>
           {#if form.enableDefaultButtonSecondary}
             <div class="ml-5">Secondary button link: <input bind:value={form.defaultButtonSecondaryLink} type="text" placeholder="enter full link with https://" class="custom-admin-input-socials" /></div>
@@ -664,24 +682,19 @@
           {/if}
         </div>
         <div class="mt-2 pl-0">
-          <input bind:checked={form.ifShowIntroTutorial} type="checkbox" />
-          Show intro tutorial
-          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(tutorial like "connect your wallet, read what you sign, etc.")</span>
+          <ExtraToggle bind:checked={form.ifShowIntroTutorial} label="Show intro tutorial" hint={'(tutorial like "connect your wallet, read what you sign, etc.")'} />
         </div>
         <div class="mt-2 pl-0">
-          <input bind:checked={form.ifShowHomeLatestComments} type="checkbox" />
-          Show latest comments
+          <ExtraToggle bind:checked={form.ifShowHomeLatestComments} label="Show latest comments" />
         </div>
         <h5 class="mt-4">Custom pages</h5>
         <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(not supported via docker/podman deployment)</span>
         <div class="ml-5">
           <div class="pl-0">
-            <input bind:checked={form.enableCustomIntro} type="checkbox" />
-            Enable custom intro page
+            <ExtraToggle bind:checked={form.enableCustomIntro} label="Enable custom intro page" />
           </div>
           <div class="pl-0">
-            <input bind:checked={form.enableCustomContacts} type="checkbox" />
-            Enable custom contacts page
+            <ExtraToggle bind:checked={form.enableCustomContacts} label="Enable custom contacts page" />
           </div>
         </div>
 
@@ -834,8 +847,7 @@
         </div>
         <h5 class="mt-2">Feed categories filters</h5>
         <div class="mt-2 ml-5">
-          <input bind:checked={form.ifShowCategoriesFilter} type="checkbox" />
-          show categories filter
+          <ExtraToggle bind:checked={form.ifShowCategoriesFilter} label="show categories filter" />
         </div>
         <div class="mt-4 ml-5">
           Categories ({count(form.envCategories)})
@@ -862,16 +874,16 @@
     {#if showOther}
       <div transition:slide={{ duration: 250 }} class="admin-card-body">
         <div>
-          <input bind:checked={form.enableShortUrlsForWeb3Actions} type="checkbox" />
-          enable short URLs for Spasm IDs (recommended length is 30+ chars)
+          <ExtraToggle bind:checked={form.enableShortUrlsForWeb3Actions} label="enable short URLs for Spasm IDs" hint="(recommended length is 30+ chars)" />
           <div class="ml-5">Short URL length: <input bind:value={form.shortUrlsLengthOfWeb3Ids} type="number" placeholder="choose a number" class="custom-admin-input-socials" /></div>
         </div>
         <div class="pl-0 mt-4">
-          <input bind:checked={form.ifShowDevelopersInfo} type="checkbox" />
-          Show developers info at
-          <a class="cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" href="/contacts">/contacts</a>
-          page
-          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(powered by Spasm)</span>
+          <ExtraToggle bind:checked={form.ifShowDevelopersInfo} label="Show developers info">
+            <span>at
+              <a class="cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" href="/contacts">/contacts</a>
+              page</span>
+            <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(powered by Spasm)</span>
+          </ExtraToggle>
         </div>
         <div class="mt-2 mb-6">
           <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" onclick={() => (showOther = !showOther)}>
@@ -895,8 +907,7 @@
         <div class="hidden mt-2 pl-4">
           RSS module:
           <div class="pl-4">
-            <input bind:checked={form.allowNewEventsWithoutSignature} type="checkbox" />
-            allow new events without signature (e.g., RSS posts)
+            <ExtraToggle bind:checked={form.allowNewEventsWithoutSignature} label="allow new events without signature" hint="(e.g., RSS posts)" />
           </div>
         </div>
         <div class="mt-4 pl-4">
@@ -910,48 +921,37 @@
         <div class="mt-4 pl-4">
           Connect button:
           <div class="ml-5">
-            <input bind:checked={form.ifAllowGuestLogin} type="checkbox" />
-            allow "log in as guest"
-            <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(uses browser-generated temporary Ethereum keys)</span>
+            <ExtraToggle bind:checked={form.ifAllowGuestLogin} label={'allow "log in as guest"'} hint="(uses browser-generated temporary Ethereum keys)" />
           </div>
         </div>
         <div class="mt-4 pl-4">
           Enable private keys:
           <div class="ml-5">
-            <div><input bind:checked={form.enableNewEthereumActionsAll} type="checkbox" /> Ethereum</div>
-            <div><input bind:checked={form.enableNewNostrActionsAll} type="checkbox" /> Nostr</div>
+            <div><ExtraToggle bind:checked={form.enableNewEthereumActionsAll} label="Ethereum" /></div>
+            <div><ExtraToggle bind:checked={form.enableNewNostrActionsAll} label="Nostr" /></div>
           </div>
         </div>
         <div class="mt-4 pl-4">
           Enable new actions:
           <div class="ml-5">
             <div>
-              <input bind:checked={form.enableNewWeb3ActionsAll} type="checkbox" />
-              all
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(you still need to enable all actions individually)</span>
+              <ExtraToggle bind:checked={form.enableNewWeb3ActionsAll} label="all" hint="(you still need to enable all actions individually)" />
             </div>
-            <div><input bind:checked={form.enableNewWeb3ActionsPost} type="checkbox" /> post</div>
+            <div><ExtraToggle bind:checked={form.enableNewWeb3ActionsPost} label="post" /></div>
             <div>
-              <input bind:checked={form.enableNewWeb3ActionsReply} type="checkbox" />
-              reply
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(comments)</span>
+              <ExtraToggle bind:checked={form.enableNewWeb3ActionsReply} label="reply" hint="(comments)" />
             </div>
             <div>
-              <input bind:checked={form.enableNewWeb3ActionsReact} type="checkbox" />
-              react
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(upvote, downvote, etc.)</span>
+              <ExtraToggle bind:checked={form.enableNewWeb3ActionsReact} label="react" hint="(upvote, downvote, etc.)" />
             </div>
             <div>
-              <input bind:checked={form.enableNewWeb3ActionsOther} type="checkbox" />
-              other
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(any non-standard event)</span>
+              <ExtraToggle bind:checked={form.enableNewWeb3ActionsOther} label="other" hint="(any non-standard event)" />
             </div>
-            <div><input bind:checked={form.enableNewWeb3ActionsModerate} type="checkbox" /> moderate</div>
+            <div><ExtraToggle bind:checked={form.enableNewWeb3ActionsModerate} label="moderate" /></div>
           </div>
         </div>
         <div class="mt-4 pl-4">
-          <input bind:checked={form.enableModeration} type="checkbox" />
-          Enable moderation
+          <ExtraToggle bind:checked={form.enableModeration} label="Enable moderation" />
           <div>
             List of moderators
             ({count(form.moderators)})
@@ -962,30 +962,27 @@
           <h6>Whitelists for new actions</h6>
           <div class="pl-2">
             <div>
-              <input bind:checked={form.enableWhitelistForActionPost} type="checkbox" />
-              enable whitelist for new posts
-              ({count(form.whitelistedForActionPost)})
+              <ExtraToggle bind:checked={form.enableWhitelistForActionPost} label="enable whitelist for new posts">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">({count(form.whitelistedForActionPost)})</span>
+              </ExtraToggle>
               <textarea bind:value={form.whitelistedForActionPost} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
             <div class="mt-4">
-              <input bind:checked={form.enableWhitelistForActionReply} type="checkbox" />
-              enable whitelist for new replies
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(comments)</span>
-              ({count(form.whitelistedForActionReply)})
+              <ExtraToggle bind:checked={form.enableWhitelistForActionReply} label="enable whitelist for new replies">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(comments) ({count(form.whitelistedForActionReply)})</span>
+              </ExtraToggle>
               <textarea bind:value={form.whitelistedForActionReply} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
             <div class="mt-4">
-              <input bind:checked={form.enableWhitelistForActionReact} type="checkbox" />
-              enable whitelist for new reactions
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(upvote, downvote, etc.)</span>
-              ({count(form.whitelistedForActionReact)})
+              <ExtraToggle bind:checked={form.enableWhitelistForActionReact} label="enable whitelist for new reactions">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(upvote, downvote, etc.) ({count(form.whitelistedForActionReact)})</span>
+              </ExtraToggle>
               <textarea bind:value={form.whitelistedForActionReact} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
             <div class="mt-4">
-              <input bind:checked={form.enableWhitelistForActionOther} type="checkbox" />
-              enable whitelist for new other actions
-              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(any non-standard event)</span>
-              ({count(form.whitelistedForActionOther)})
+              <ExtraToggle bind:checked={form.enableWhitelistForActionOther} label="enable whitelist for new other actions">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">(any non-standard event) ({count(form.whitelistedForActionOther)})</span>
+              </ExtraToggle>
               <textarea bind:value={form.whitelistedForActionOther} placeholder="0x123456789,npub123456789" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-hidden rounded-b-lg border-2"></textarea>
             </div>
           </div>
@@ -1013,44 +1010,44 @@
           <div class="mt-2 pl-0">
             <div class="mt-2 pl-0">
               <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Markdown must be allowed to auto-embed images, videos, and audios</span>
-              <div class="mt-2 pl-0"><input bind:checked={form.enableMarkdownInPosts} type="checkbox" /> allow markdown in posts</div>
-              <div class="mt-2 pl-0"><input bind:checked={form.enableMarkdownInComments} type="checkbox" /> allow markdown in comments</div>
+              <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableMarkdownInPosts} label="allow markdown in posts" /></div>
+              <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableMarkdownInComments} label="allow markdown in comments" /></div>
             </div>
 
             {#if form.enableMarkdownInPosts || form.enableMarkdownInComments}
               <div class="mt-2 pl-5">
                 <div class="mt-2 pl-0">
                   <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Images</span>
-                  <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedImageTagsForAllUsers} type="checkbox" /> auto-embed images</div>
+                  <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedImageTagsForAllUsers} label="auto-embed images" /></div>
                   {#if form.enableEmbedImageTagsForAllUsers}
                     <div class="mt-0 pl-5">
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedImageTagsInPosts} type="checkbox" /> in posts</div>
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedImageTagsInComments} type="checkbox" /> in comments</div>
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedImageTagsForFullLineImageLinks} type="checkbox" /> full-line links</div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedImageTagsInPosts} label="in posts" /></div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedImageTagsInComments} label="in comments" /></div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedImageTagsForFullLineImageLinks} label="full-line links" /></div>
                     </div>
                   {/if}
                 </div>
 
                 <div class="mt-2 pl-0">
                   <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Videos</span>
-                  <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedVideoTagsForAllUsers} type="checkbox" /> auto-embed videos</div>
+                  <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedVideoTagsForAllUsers} label="auto-embed videos" /></div>
                   {#if form.enableEmbedVideoTagsForAllUsers}
                     <div class="mt-2 pl-5">
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedVideoTagsInPosts} type="checkbox" /> in posts</div>
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedVideoTagsInComments} type="checkbox" /> in comments</div>
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedVideoTagsForFullLineVideoLinks} type="checkbox" /> full-line links</div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedVideoTagsInPosts} label="in posts" /></div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedVideoTagsInComments} label="in comments" /></div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedVideoTagsForFullLineVideoLinks} label="full-line links" /></div>
                     </div>
                   {/if}
                 </div>
 
                 <div class="mt-2 pl-0">
                   <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Audios</span>
-                  <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedAudioTagsForAllUsers} type="checkbox" /> auto-embed audios</div>
+                  <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedAudioTagsForAllUsers} label="auto-embed audios" /></div>
                   {#if form.enableEmbedAudioTagsForAllUsers}
                     <div class="mt-2 pl-5">
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedAudioTagsInPosts} type="checkbox" /> in posts</div>
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedAudioTagsInComments} type="checkbox" /> in comments</div>
-                      <div class="mt-2 pl-0"><input bind:checked={form.enableEmbedAudioTagsForFullLineAudioLinks} type="checkbox" /> full-line links</div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedAudioTagsInPosts} label="in posts" /></div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedAudioTagsInComments} label="in comments" /></div>
+                      <div class="mt-2 pl-0"><ExtraToggle bind:checked={form.enableEmbedAudioTagsForFullLineAudioLinks} label="full-line links" /></div>
                     </div>
                   {/if}
                 </div>
@@ -1081,8 +1078,7 @@
         <div class="mt-2 pl-4">
           <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Configure your RSS channel so users can follow your instance with legacy tech</span>
           <div class="mt-2 pl-0">
-            <input bind:checked={form.enableRssFeedChannel} type="checkbox" />
-            enable RSS channel
+            <ExtraToggle bind:checked={form.enableRssFeedChannel} label="enable RSS channel" />
 
             {#if form.enableRssFeedChannel}
               <div class="pl-4 mt-2">
@@ -1117,35 +1113,32 @@
         <div class="mt-2 pl-4">
           <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">You can enable federation to automatically fetch events (posts, comments) from other instances.</span>
           <div class="mt-2 pl-0">
-            <input bind:checked={form.enableSpasmModule} type="checkbox" />
-            enable federation
+            <ExtraToggle bind:checked={form.enableSpasmModule} label="enable federation" />
 
             {#if form.enableSpasmModule}
               <div class="pl-4 mt-2">
                 <div class="mb-2">
-                  <input bind:checked={form.enableFederationDefaultLists} type="checkbox" />
-                  enable default federation lists:
+                  <ExtraToggle bind:checked={form.enableFederationDefaultLists} label="enable default federation lists:" />
 
                   {#if form.enableFederationDefaultLists}
-                    <div class="pl-4 mt-2"><input bind:checked={form.enableFederationDefaultListOfficial} type="checkbox" /> spasm</div>
+                    <div class="pl-4 mt-2"><ExtraToggle bind:checked={form.enableFederationDefaultListOfficial} label="spasm" /></div>
                   {/if}
                   {#if form.enableFederationDefaultLists}
-                    <div class="pl-4 mt-2"><input bind:checked={form.enableFederationDefaultListCrypto} type="checkbox" /> crypto</div>
+                    <div class="pl-4 mt-2"><ExtraToggle bind:checked={form.enableFederationDefaultListCrypto} label="crypto" /></div>
                   {/if}
                   {#if form.enableFederationDefaultLists}
-                    <div class="pl-4 mt-2"><input bind:checked={form.enableFederationDefaultListPrivacy} type="checkbox" /> privacy</div>
+                    <div class="pl-4 mt-2"><ExtraToggle bind:checked={form.enableFederationDefaultListPrivacy} label="privacy" /></div>
                   {/if}
                   {#if form.enableFederationDefaultLists}
-                    <div class="pl-4 mt-2"><input bind:checked={form.enableFederationDefaultListTech} type="checkbox" /> tech</div>
+                    <div class="pl-4 mt-2"><ExtraToggle bind:checked={form.enableFederationDefaultListTech} label="tech" /></div>
                   {/if}
                   {#if form.enableFederationDefaultLists}
-                    <div class="pl-4 mt-2"><input bind:checked={form.enableFederationDefaultListPolitics} type="checkbox" /> politics</div>
+                    <div class="pl-4 mt-2"><ExtraToggle bind:checked={form.enableFederationDefaultListPolitics} label="politics" /></div>
                   {/if}
                 </div>
 
                 <div class="mb-2">
-                  <input bind:checked={form.enableFederationCustomLinks} type="checkbox" />
-                  enable custom federation links:
+                  <ExtraToggle bind:checked={form.enableFederationCustomLinks} label="enable custom federation links:" />
                   {#if form.enableFederationCustomLinks}
                     <div class="mt-4 pl-4">
                       List of custom links
@@ -1161,8 +1154,7 @@
                 </div>
 
                 <div class="mb-2 hidden">
-                  <input bind:checked={form.enableFederationCustomSources} type="checkbox" />
-                  enable custom federation sources:
+                  <ExtraToggle bind:checked={form.enableFederationCustomSources} label="enable custom federation sources:" />
                 </div>
               </div>
             {/if}
@@ -1192,6 +1184,9 @@
           >
             Save app config
           </button>
+          {#if isDirty}
+            <span class="ml-3 text-colorOrange-light dark:text-colorOrange-dark">Unsaved changes</span>
+          {/if}
         </div>
       {/if}
     </div>
@@ -1199,3 +1194,10 @@
 
   <div class="mb-32"></div>
 </div>
+
+<ExtraFaviconModal
+  bind:open={faviconModalOpen}
+  selected={form.faviconTheme}
+  customLink={form.faviconLink}
+  onselect={(name) => selectFavicon(name)}
+/>
